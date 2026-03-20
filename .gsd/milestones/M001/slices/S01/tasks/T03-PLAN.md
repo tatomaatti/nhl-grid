@@ -81,3 +81,10 @@ Ristinollapelin (index.html) mobiili-UX tarvitsee samat peruskorjaukset kuin dai
 ## Expected Output
 
 - `index.html` — päivitetty kaikilla mobiili-UX-korjauksilla
+
+## Observability Impact
+
+- **New signal**: `console.log('[MobileUX]', ...)` visualViewport resize handler in index.html — logs keyboard height and active input context (search-input vs join-code-input)
+- **Inspection**: DevTools Console filter `[MobileUX]` shows keyboard open/close events with pixel values
+- **Failure visibility**: `bash scripts/verify-s01.sh` reports PASS/FAIL per check with expected vs actual; all index.html checks must pass after this task
+- **Future agent**: grep `[MobileUX]` in index.html to find the viewport handler; check `scripts/verify-s01.sh` for the full set of automated checks

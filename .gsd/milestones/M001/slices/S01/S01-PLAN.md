@@ -59,7 +59,7 @@
   - Verify: `bash scripts/verify-s01.sh` — daily.html-tarkistukset läpäisevät
   - Done when: daily.html sisältää kaikki mobile-korjaukset, verify-script passaa
 
-- [ ] **T03: Mobiili-UX-korjaukset index.html** `est:30m`
+- [x] **T03: Mobiili-UX-korjaukset index.html** `est:30m`
   - Why: R001 — ristinollapeli tarvitsee samat mobiilikorjaukset, lisäksi settings-näkymän painikkeet ovat liian pieniä (steal-count-btns 36→44px, weight-btns 30→44px)
   - Files: `index.html`
   - Do: 1) Viewport meta: `interactive-widget=overlays-content`. 2) CSS body: `min-height: 100svh` (fallback 100vh), `overscroll-behavior: none`. 3) `touch-action: manipulation` kaikille painikkeille ja interaktiivisille. 4) Min 44×44px kaikille klikattaville — erityishuomio: `.steal-count-btns button` 36→44px, `.weight-btns button` 30→44px, `.surrender-actions button`, `.btn-rematch`, `.btn-menu`. 5) `visualViewport` API: siirrä .search-wrap kun näppäimistö aukeaa. 6) Estä zoom kaksoisnapautuksella. 7) Lisää `[MobileUX]` console.log visualViewport-handleriin. 8) Tarkista lobby-näkymän elementit (join-code-input, lobby-painikkeet).

@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=overlays-content">
 <title>NHL Hockey Grid</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,10 +12,12 @@ body {
   background: #1a1a2e;
   color: #fff;
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
+  overscroll-behavior: none;
 }
 
 /* ===== SETTINGS ===== */
@@ -110,7 +112,7 @@ body {
 .steal-count-label { font-size: 13px; color: #aaa; }
 .steal-count-btns { display: flex; gap: 6px; }
 .steal-count-btns button {
-  width: 36px; height: 36px;
+  width: 44px; height: 44px;
   border: 2px solid #2a2a4a;
   background: #0f3460;
   color: #ccc;
@@ -135,7 +137,7 @@ body {
 .weight-sub-label { font-size: 12px; color: #777; }
 .weight-btns { display: flex; gap: 4px; }
 .weight-btns button {
-  width: 30px; height: 30px;
+  width: 44px; height: 44px;
   border: 2px solid #2a2a4a;
   background: #0f3460;
   color: #ccc;
@@ -157,6 +159,7 @@ body {
 }
 .hint-btn {
   padding: 5px 14px;
+  min-height: 44px;
   background: #2a4a3a;
   border: 1px solid #3a6a4a;
   border-radius: 8px;
@@ -251,6 +254,7 @@ body {
 .lobby-join-input {
   flex: 1;
   padding: 12px 16px;
+  min-height: 44px;
   background: #0f3460;
   border: 2px solid #2a2a4a;
   border-radius: 8px;
@@ -276,6 +280,7 @@ body {
 .lobby-back-btn {
   margin-top: 20px;
   padding: 8px 16px;
+  min-height: 44px;
   background: transparent;
   border: 1px solid #333;
   color: #666;
@@ -394,6 +399,7 @@ body {
 .surrender-actions { display: flex; gap: 10px; justify-content: center; }
 .surrender-actions button {
   padding: 10px 22px;
+  min-height: 44px;
   border-radius: 8px;
   border: none;
   font-size: 14px;
@@ -445,6 +451,7 @@ body {
 .search-input {
   width: 100%;
   padding: 13px 16px;
+  min-height: 44px;
   background: #16213e;
   border: 2px solid #2a2a4a;
   border-radius: 10px;
@@ -474,6 +481,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
+  min-height: 44px;
   cursor: pointer;
   font-size: 14px;
   border-bottom: 1px solid #2a3a5a;
@@ -671,6 +679,11 @@ body {
 .round-result-text { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
 .round-series-text { font-size: 15px; color: #aaa; margin-bottom: 20px; }
 .round-btns { display: flex; gap: 10px; justify-content: center; }
+
+/* ===== MOBILE UX ===== */
+button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .category-header {
+  touch-action: manipulation;
+}
 </style>
 </head>
 <body>
@@ -2316,6 +2329,49 @@ document.addEventListener('DOMContentLoaded', function() {
     joinOnlineGame(roomCode);
   }
 });
+
+// =====================================================================
+// MOBILE UX — visualViewport keyboard handler
+// =====================================================================
+if (window.visualViewport) {
+  let lastKeyboardHeight = 0;
+  window.visualViewport.addEventListener('resize', function () {
+    const keyboardHeight = Math.round(window.innerHeight - window.visualViewport.height);
+    const isOpen = keyboardHeight > 50;
+
+    // Only log on state change
+    if (Math.abs(keyboardHeight - lastKeyboardHeight) > 10) {
+      const activeEl = document.activeElement;
+      const context = activeEl ? (activeEl.id || activeEl.className || activeEl.tagName) : 'none';
+      console.log('[MobileUX] keyboard height:', keyboardHeight, 'open:', isOpen, 'context:', context);
+      lastKeyboardHeight = keyboardHeight;
+    }
+
+    // Shift search-wrap when keyboard opens during player search
+    const searchWrap = document.querySelector('.search-wrap');
+    if (searchWrap && searchWrap.offsetParent !== null) {
+      if (isOpen) {
+        searchWrap.style.transform = 'translateY(-' + Math.min(keyboardHeight * 0.4, 120) + 'px)';
+        searchWrap.style.transition = 'transform 0.15s ease-out';
+      } else {
+        searchWrap.style.transform = '';
+        searchWrap.style.transition = '';
+      }
+    }
+
+    // Shift lobby join section when keyboard opens during code entry
+    const joinSection = document.getElementById('lobby-join-section');
+    if (joinSection && joinSection.style.display !== 'none') {
+      if (isOpen) {
+        joinSection.style.transform = 'translateY(-' + Math.min(keyboardHeight * 0.3, 80) + 'px)';
+        joinSection.style.transition = 'transform 0.15s ease-out';
+      } else {
+        joinSection.style.transform = '';
+        joinSection.style.transition = '';
+      }
+    }
+  });
+}
 
 </script>
 </body>
