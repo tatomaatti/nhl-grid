@@ -1,8 +1,10 @@
 # Requirements
 
+This file is the explicit capability and coverage contract for the project.
+
 ## Active
 
-### R001 — Mobiili-UX toimii moitteettomasti
+### R001 — Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
 - Class: primary-user-loop
 - Status: active
 - Description: Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
@@ -10,10 +12,10 @@
 - Source: user
 - Primary owning slice: M001/S01
 - Supporting slices: none
-- Validation: unmapped
+- Validation: bash scripts/verify-s01.sh passaa kaikki mobiili-tarkistukset (viewport, touch targets, visualViewport) + selaintestaus mobile-viewportilla
 - Notes: viewport meta, 100svh, touch-action, visualViewport API
 
-### R002 — Ei duplikaattitiedostoja
+### R002 — index.html ja nhl-grid.html eivät saa olla identtiset kopiot
 - Class: quality-attribute
 - Status: active
 - Description: index.html ja nhl-grid.html eivät saa olla identtiset kopiot
@@ -21,10 +23,10 @@
 - Source: inferred
 - Primary owning slice: M001/S01
 - Supporting slices: none
-- Validation: unmapped
+- Validation: nhl-grid.html on ≤50 riviä ja sisältää redirect index.html:iin; `diff nhl-grid.html index.html` tuottaa eroja (ei duplikaatti)
 - Notes: Toinen tiedosto pitää korvata redirectillä
 
-### R003 — Pelaajatietokanta on ajan tasalla ja auditoitu
+### R003 — players.js on rebuildittu tuoreesta raakadatasta, audit läpäisty (0 menetettyjä pelaajia/palkintoja)
 - Class: core-capability
 - Status: active
 - Description: players.js on rebuildittu tuoreesta raakadatasta, audit läpäisty (0 menetettyjä pelaajia/palkintoja)
@@ -35,7 +37,7 @@
 - Validation: unmapped
 - Notes: ETL-pipeline valmis, awards + cup rosters cachettu
 
-### R004 — Daily Grid tuottaa laadukkaita puzzleita
+### R004 — Jokainen generoitu Daily Grid on ratkaistavissa, monipuolinen ja taktisesti kiinnostava
 - Class: primary-user-loop
 - Status: active
 - Description: Jokainen generoitu Daily Grid on ratkaistavissa, monipuolinen ja taktisesti kiinnostava
@@ -46,7 +48,7 @@
 - Validation: unmapped
 - Notes: Grid-generaattorin validointi ja testaus
 
-### R005 — Koodi on ylläpidettävää
+### R005 — JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
 - Class: quality-attribute
 - Status: active
 - Description: JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
@@ -57,7 +59,7 @@
 - Validation: unmapped
 - Notes: JS eriytetään, ExpressTURN-tunnukset siirretään config.js:ään
 
-### R006 — Monikielisyys (FI/EN)
+### R006 — Peli tukee suomea ja englantia. Oletuskieli seuraa selaimen/järjestelmän kieltä (navigator.language), fallback englanti. Pelaaja voi vaihtaa kielen manuaalisesti.
 - Class: primary-user-loop
 - Status: active
 - Description: Peli tukee suomea ja englantia. Oletuskieli seuraa selaimen/järjestelmän kieltä (navigator.language), fallback englanti. Pelaaja voi vaihtaa kielen manuaalisesti.
@@ -68,7 +70,7 @@
 - Validation: unmapped
 - Notes: Englanti vakiona ellei järjestelmä ole suomi
 
-### R010 — Ristinolla: pelaaja 2:n varastukset eivät kulu
+### R010 — Ristinollapelissä pelaaja 2:n "steals" eivät vähene käytettäessä — bugi
 - Class: core-capability
 - Status: active
 - Description: Ristinollapelissä pelaaja 2:n "steals" eivät vähene käytettäessä — bugi
@@ -79,7 +81,7 @@
 - Validation: unmapped
 - Notes: Bugikorjaus
 
-### R011 — Online-peli: ensimmäinen peli katkeaa
+### R011 — Online-ristinollassa ensimmäinen peli katkeaa lähes aina, mutta sivunpäivityksen jälkeen toimii
 - Class: core-capability
 - Status: active
 - Description: Online-ristinollassa ensimmäinen peli katkeaa lähes aina, mutta sivunpäivityksen jälkeen toimii
@@ -90,7 +92,7 @@
 - Validation: unmapped
 - Notes: Todennäköisesti PeerJS-yhteyden alustuksen timing-ongelma
 
-### R012 — Daily Grid: joukkuenimet lyhenteinä
+### R012 — Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
 - Class: primary-user-loop
 - Status: active
 - Description: Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
@@ -101,7 +103,7 @@
 - Validation: unmapped
 - Notes: Vaikuttaa grid-renderöintiin ja guess-paneliin
 
-### R013 — Ei-pelissä-olevat palkinnot piilotetaan UI:sta
+### R013 — Pelaajien palkinnot jotka eivät ole pelissä kategorioina (esim. MarkMessierLeadershipAward) eivät näy vihjeissä eikä UI:ssa, mutta säilytetään databasessa
 - Class: primary-user-loop
 - Status: active
 - Description: Pelaajien palkinnot jotka eivät ole pelissä kategorioina (esim. MarkMessierLeadershipAward) eivät näy vihjeissä eikä UI:ssa, mutta säilytetään databasessa
@@ -114,7 +116,7 @@
 
 ## Deferred
 
-### R014 — Firebase-moninpeli
+### R014 — Ristinolla siirretään PeerJS:stä Firebase Realtime Databaseen
 - Class: core-capability
 - Status: deferred
 - Description: Ristinolla siirretään PeerJS:stä Firebase Realtime Databaseen
@@ -125,7 +127,7 @@
 - Validation: unmapped
 - Notes: Vaatii Firebase-projektin luonnin (käyttäjätoimenpide)
 
-### R015 — PWA-tuki
+### R015 — Peli on asennettavissa puhelimen kotinäytölle (manifest.json + service worker)
 - Class: launchability
 - Status: deferred
 - Description: Peli on asennettavissa puhelimen kotinäytölle (manifest.json + service worker)
@@ -136,7 +138,7 @@
 - Validation: unmapped
 - Notes: Odottaa mobiilikorjausten valmistumista
 
-### R016 — Oma domain + Cloudflare Pages
+### R016 — Peli siirretään omalle domainille, GitHub-repo yksityiseksi
 - Class: launchability
 - Status: deferred
 - Description: Peli siirretään omalle domainille, GitHub-repo yksityiseksi
@@ -149,7 +151,7 @@
 
 ## Out of Scope
 
-### R017 — Monetisointi (mainokset, lahjoitukset)
+### R017 — AdSense-integraatio, rewarded ads, Ko-fi
 - Class: differentiator
 - Status: out-of-scope
 - Description: AdSense-integraatio, rewarded ads, Ko-fi
@@ -164,8 +166,8 @@
 
 | ID | Class | Status | Primary owner | Supporting | Proof |
 |---|---|---|---|---|---|
-| R001 | primary-user-loop | active | M001/S01 | none | unmapped |
-| R002 | quality-attribute | active | M001/S01 | none | unmapped |
+| R001 | primary-user-loop | active | M001/S01 | none | bash scripts/verify-s01.sh passaa kaikki mobiili-tarkistukset (viewport, touch targets, visualViewport) + selaintestaus mobile-viewportilla |
+| R002 | quality-attribute | active | M001/S01 | none | nhl-grid.html on ≤50 riviä ja sisältää redirect index.html:iin; `diff nhl-grid.html index.html` tuottaa eroja (ei duplikaatti) |
 | R003 | core-capability | active | M001/S02 | none | unmapped |
 | R004 | primary-user-loop | active | M001/S03 | none | unmapped |
 | R005 | quality-attribute | active | M001/S04 | none | unmapped |
