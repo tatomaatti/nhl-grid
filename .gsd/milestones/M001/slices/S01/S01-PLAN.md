@@ -45,7 +45,7 @@
 
 ## Tasks
 
-- [ ] **T01: Repo-siistiminen: .gitignore, .player-cache ja nhl-grid.html redirect** `est:20m`
+- [x] **T01: Repo-siistiminen: .gitignore, .player-cache ja nhl-grid.html redirect** `est:20m`
   - Why: .player-cache (6073 tiedostoa) on git-seurannassa turhaan, nhl-grid.html on identtinen duplikaatti index.html:stä (D002), .gitignore puuttuu projektikohtaiset poissulkemiset
   - Files: `.gitignore`, `nhl-grid.html`, `scripts/verify-s01.sh`
   - Do: 1) Lisää .gitignore:en projektikohtaiset rivit. 2) `git rm -r --cached .player-cache/` poistaa seurannan. 3) Korvaa nhl-grid.html redirect-sivulla (meta refresh + JS). 4) Luo scripts/verify-s01.sh joka tarkistaa kaikki slicen must-have-ehdot.

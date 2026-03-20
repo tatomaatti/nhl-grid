@@ -54,6 +54,13 @@ Projektin repo sisältää 6073 .player-cache-tiedostoa git-seurannassa, .gitign
 - `test $(wc -l < nhl-grid.html) -le 50 && grep -q "url=index.html" nhl-grid.html && echo PASS || echo FAIL`
 - `bash scripts/verify-s01.sh` — .gitignore- ja redirect-tarkistukset passaavat (mobile-tarkistukset voivat vielä failata)
 
+## Observability Impact
+
+- **verify-s01.sh**: New inspection surface — `bash scripts/verify-s01.sh` reports PASS/FAIL per check with explanatory messages. Future agents run this to see slice health at a glance.
+- **.gitignore**: No runtime signal change. Prevents accidental tracking of cache/runtime files.
+- **nhl-grid.html redirect**: No diagnostic signals. If redirect fails, users see a static link as fallback.
+- **Failure visibility**: verify-s01.sh exit code 1 + count of failures in summary line. Each FAIL message names the file and missing token.
+
 ## Inputs
 
 - `.gitignore` — nykyinen GSD-baseline gitignore, puuttuu projektikohtaiset rivit
