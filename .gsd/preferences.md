@@ -23,7 +23,7 @@ git:
   commit_type:
   main_branch: main
   merge_strategy:
-  isolation:
+  isolation: none
   manage_gitignore: true
   worktree_post_create:
 unique_milestone_ids: false
