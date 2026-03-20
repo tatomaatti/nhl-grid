@@ -43,7 +43,7 @@
 
 ## Tasks
 
-- [ ] **T01: Korjaa assembly, rebuild players-raw.json ja players.js** `est:45m`
+- [x] **T01: Korjaa assembly, rebuild players-raw.json ja players.js** `est:45m`
   - Why: Awards-cachen landing-sivuilla on position/shootsCatches-data mutta `assembleRawData()` ei poimi niitä. Tämä korjaus + reassembly + rebuild tuottaa täydellisen pelaajatietokannan.
   - Files: `fetch-raw.js`, `players-raw.json`, `players.js`, `players-full.js`, `overrides.json`
   - Do: 1) Lisää `assembleRawData()`-funktioon Phase 3 -kohtaan position/shootsCatches-kenttien poiminta awards-cachesta. 2) Aja `node fetch-raw.js --assemble-only` reassembloidaksesi players-raw.json. 3) Aja `node build-players-db.js` ja tarkista audit. 4) Aja `node build-players-db.js --include-extra` ja kopioi output players-full.js:ksi. 5) Jos audit paljastaa ongelmia, päivitä overrides.json ja aja rebuild uudelleen. 6) Spot-check avainpelaajat.

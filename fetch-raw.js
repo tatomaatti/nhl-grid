@@ -514,14 +514,19 @@ function assembleRawData() {
 
   console.log(`  After bios+teams: ${Object.keys(players).length} players`);
 
-  // Phase 3: Player awards
+  // Phase 3: Player awards + bio enrichment from landing page cache
   let awardsCount = 0;
+  let positionCount = 0;
+  let shootsCount = 0;
+  let birthDateCount = 0;
   if (existsSync(AWARDS_CACHE)) {
     for (const id of Object.keys(players)) {
       if (hasAwardsCached(id)) {
         const cached = readAwardsCache(id);
+        const rec = players[id];
+
+        // Awards extraction
         if (cached.awards && cached.awards.length > 0) {
-          const rec = players[id];
           for (const award of cached.awards) {
             // Append-only: add source "player-awards-api"
             if (!rec.awards[award]) rec.awards[award] = { sources: [] };
@@ -531,10 +536,25 @@ function assembleRawData() {
           }
           awardsCount++;
         }
+
+        // Bio enrichment from landing page cache (position, shoots, birthDate)
+        if (cached.position && !rec.position) {
+          rec.position = cached.position;
+          positionCount++;
+        }
+        if (cached.shootsCatches && !rec.shoots) {
+          rec.shoots = cached.shootsCatches;
+          shootsCount++;
+        }
+        if (cached.birthDate && !rec.birthDate) {
+          rec.birthDate = cached.birthDate;
+          birthDateCount++;
+        }
       }
     }
   }
   console.log(`  After player awards: ${awardsCount} players have awards from API`);
+  console.log(`  Bio enrichment from landing pages: ${positionCount} position, ${shootsCount} shoots, ${birthDateCount} birthDate`);
 
   // Phase 4: Cup rosters — give StanleyCup to all players on winning roster
   let cupCount = 0;
