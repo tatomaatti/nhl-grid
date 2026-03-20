@@ -28,3 +28,18 @@
 - nhl-grid.html sisältää kovakoodattuja STUN/TURN-tunnuksia
 - Tämä on väliaikainen — poistuu Firebase-siirtymässä
 - Ei turvallisuusriski koska repo on yksityinen ja ilmaistason quota
+
+## K007 — Tunnetut bugit (käyttäjäraportti 2026-03-21)
+- Ristinolla: pelaaja 2:n steals ei kulu käytettäessä
+- Online-peli: ensimmäinen peli katkeaa lähes aina, sivunpäivitys korjaa
+- Molemmat korjataan S05:ssä
+
+## K008 — Pelissä olevat vs ei-pelissä-olevat palkinnot
+- PELISSÄ (arvattavina kategorioina): Hart, Vezina, Norris, StanleyCup, Calder, RocketRichard, ConnSmythe, ArtRoss, TedLindsay, Selke
+- EI PELISSÄ (piilotetaan UI:sta): JackAdams, LadyByng, Masterton, Jennings, KingClancy, MessierLeadership
+- Piilotetut palkinnot SÄILYVÄT players.js:ssä — filtteri on vain UI-tasolla
+
+## K009 — Lokalisaatio
+- Oletuskieli: navigator.language → "fi" jos alkaa "fi", muuten "en"
+- Kielivalinta tallennetaan localStorage:en
+- Joukkuenimet ovat aina englanniksi (NHL-vakio), kansallisuudet lokalisoidaan
