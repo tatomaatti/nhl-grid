@@ -82,3 +82,10 @@ Daily Grid -pelin (daily.html) mobiili-UX on rikki: viewport meta ei sisällä `
 ## Expected Output
 
 - `daily.html` — päivitetty kaikilla mobiili-UX-korjauksilla
+
+## Observability Impact
+
+- **New runtime signal**: `console.log('[MobileUX] ...')` in visualViewport resize handler — logs keyboard height and guess-panel translation. Filter in DevTools with `[MobileUX]`.
+- **Inspection**: Open daily.html on mobile (or DevTools mobile emulation), tap search input → console shows `[MobileUX] keyboard height: Npx, panel shift: Npx`.
+- **Failure visibility**: If virtualViewport API is unavailable, handler is not attached (feature detection) — no errors, no logs. If handler fires but panel doesn't move, logs show height=0.
+- **Verification script**: `scripts/verify-s01.sh` checks for `interactive-widget`, `100svh`, `touch-action`, `overscroll-behavior`, `visualViewport`, and `44px` touch targets in daily.html.

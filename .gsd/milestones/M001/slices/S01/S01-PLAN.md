@@ -52,7 +52,7 @@
   - Verify: `bash scripts/verify-s01.sh` — .gitignore ja redirect -tarkistukset läpäisevät
   - Done when: .gitignore commitoitu, .player-cache pois seurannasta, nhl-grid.html on redirect, verify-script olemassa
 
-- [ ] **T02: Mobiili-UX-korjaukset daily.html** `est:30m`
+- [x] **T02: Mobiili-UX-korjaukset daily.html** `est:30m`
   - Why: R001 — virtuaalinäppäimistö rikkoo layoutin mobiilissa, kosketusalueet liian pieniä
   - Files: `daily.html`
   - Do: 1) Viewport meta: `interactive-widget=overlays-content`. 2) CSS body: `min-height: 100svh` (fallback 100vh), `overscroll-behavior: none`. 3) `touch-action: manipulation` kaikille painikkeille ja interaktiivisille. 4) Min 44×44px kaikille klikattaville (tarkista: share-btn, practice-btn, hint-mode button, guess-item, col-header, row-header). 5) `visualViewport` API: siirrä guess-panelia kun näppäimistö aukeaa iOS Safarissa — käytä `visualViewport.resize`-eventtejä, laske näppäimistön korkeus, translateY guess-panel ylöspäin. 6) Estä zoom kaksoisnapautuksella (`touch-action: manipulation`). 7) Lisää `[MobileUX]`-prefixillä console.log visualViewport-handleriin diagnostiikkaa varten.

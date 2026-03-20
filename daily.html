@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=overlays-content">
 <title>NHL Grid Daily</title>
 <script src="players.js"></script>
 <style>
@@ -12,11 +12,13 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #1a1a2e;
   color: #fff;
-  min-height: 100vh;
+  min-height: 100vh; /* fallback for older browsers */
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
+  overscroll-behavior: none;
 }
 
 /* ── SCREENS ─────────────────────────────────────────────── */
@@ -77,6 +79,7 @@ body {
 /* ── GRID ────────────────────────────────────────────────── */
 .daily-grid-wrap {
   overflow-x: auto;
+  user-select: none;
 }
 .daily-grid {
   display: grid;
@@ -268,7 +271,8 @@ body {
   color: #000;
   border: none;
   border-radius: 6px;
-  padding: 4px 12px;
+  padding: 10px 16px;
+  min-height: 44px;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
@@ -300,6 +304,7 @@ body {
   color: #fff;
   font-size: 14px;
   padding: 8px 12px;
+  min-height: 44px;
   margin-bottom: 8px;
   outline: none;
   transition: border-color 0.2s;
@@ -326,6 +331,7 @@ body {
   font-size: 13px;
   transition: background 0.15s, border-color 0.15s;
   user-select: none;
+  min-height: 44px;
 }
 .guess-item:hover {
   background: #1a2e4a;
@@ -454,6 +460,7 @@ body {
   border: none;
   border-radius: 10px;
   padding: 12px 28px;
+  min-height: 44px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
@@ -533,6 +540,11 @@ body {
   display: inline-block;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── MOBILE TOUCH ────────────────────────────────────────── */
+button, input, [onclick], .guess-item, .col-header, .row-header, .player-cell.hintable {
+  touch-action: manipulation;
+}
 </style>
 </head>
 <body>
@@ -1718,6 +1730,38 @@ function startPractice() {
   renderLives();
   renderGrid();
   updateProgress();
+}
+
+// =====================================================================
+// MOBILE UX — visualViewport keyboard handling
+// =====================================================================
+if (window.visualViewport) {
+  let lastKeyboardHeight = 0;
+
+  window.visualViewport.addEventListener('resize', () => {
+    const keyboardHeight = Math.round(window.innerHeight - window.visualViewport.height);
+    const guessPanel = document.getElementById('guess-panel');
+    const isPanelOpen = guessPanel && guessPanel.style.display !== 'none';
+
+    console.log('[MobileUX] keyboard height:', keyboardHeight, 'panel open:', isPanelOpen);
+
+    if (isPanelOpen && keyboardHeight > 50) {
+      // Shift guess panel up so search input stays visible above keyboard
+      const shift = Math.min(keyboardHeight, window.innerHeight * 0.5);
+      guessPanel.style.transform = `translateY(-${shift}px)`;
+      guessPanel.style.transition = 'transform 0.15s ease-out';
+      console.log('[MobileUX] panel shift:', shift);
+    } else if (keyboardHeight <= 50 && lastKeyboardHeight > 50) {
+      // Keyboard closed — reset position
+      if (guessPanel) {
+        guessPanel.style.transform = '';
+        guessPanel.style.transition = 'transform 0.15s ease-out';
+      }
+      console.log('[MobileUX] panel reset');
+    }
+
+    lastKeyboardHeight = keyboardHeight;
+  });
 }
 </script>
 </body>
