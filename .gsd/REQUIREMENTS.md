@@ -12,7 +12,7 @@ This file is the explicit capability and coverage contract for the project.
 - Source: user
 - Primary owning slice: M001/S02
 - Supporting slices: none
-- Validation: unmapped
+- Validation: T01: audit 0 lost players/awards, spot-check 6 pelaajaa. T02: selaintesti daily.html + index.html lataa DB:n, pelaajahaku toimii.
 - Notes: ETL-pipeline valmis, awards + cup rosters cachettu
 
 ### R004 — Jokainen generoitu Daily Grid on ratkaistavissa, monipuolinen ja taktisesti kiinnostava
@@ -170,7 +170,7 @@ This file is the explicit capability and coverage contract for the project.
 |---|---|---|---|---|---|
 | R001 | primary-user-loop | validated | M001/S01 | none | bash scripts/verify-s01.sh passaa kaikki 21 tarkistusta (viewport, touch targets ≥44px, visualViewport, overscroll-behavior, touch-action) — vahvistettu 2026-03-21. Lopullinen mobiili-UAT (iOS Safari + Android Chrome) vaaditaan erikseen. |
 | R002 | quality-attribute | validated | M001/S01 | none | nhl-grid.html on 14-rivinen redirect-sivu (meta refresh + JS fallback + noscript). diff nhl-grid.html index.html tuottaa eroja. Vahvistettu verify-s01.sh:llä. |
-| R003 | core-capability | active | M001/S02 | none | unmapped |
+| R003 | core-capability | active | M001/S02 | none | T01: audit 0 lost players/awards, spot-check 6 pelaajaa. T02: selaintesti daily.html + index.html lataa DB:n, pelaajahaku toimii. |
 | R004 | primary-user-loop | active | M001/S03 | none | unmapped |
 | R005 | quality-attribute | active | M001/S04 | none | unmapped |
 | R006 | primary-user-loop | active | M001/S05 | none | unmapped |
