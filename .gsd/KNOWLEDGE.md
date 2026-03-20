@@ -43,3 +43,16 @@
 - Oletuskieli: navigator.language → "fi" jos alkaa "fi", muuten "en"
 - Kielivalinta tallennetaan localStorage:en
 - Joukkuenimet ovat aina englanniksi (NHL-vakio), kansallisuudet lokalisoidaan
+
+## K010 — visualViewport-näppäimistön käsittely
+- Käytä `visualViewport.resize`-eventtiä, EI `scrollIntoView`:ta (epäluotettava selainten välillä)
+- Laske näppäimistön korkeus: `window.innerHeight - visualViewport.height`
+- Kynnysarvo 50px — pienemmät muutokset ovat osoitepalkin kutistumista, eivät näppäimistöä
+- Siirrä elementtiä `translateY(-Npx)` missä N on suhteessa näppäimistön korkeuteen
+- `[MobileUX]`-prefixi konsolilokissa — filtteröi DevToolsissa
+- Identtinen logiikka daily.html:ssä ja index.html:ssä — S04:n JS-erotuksessa yhdistetään
+
+## K011 — Touch target audit
+- iOS/Android minimum: 44×44px (Apple HIG / Material)
+- index.html:n pieniä painikkeita jotka tarvitsivat korjausta: steal-count (36px), weight (30px), hint-btn (26px), surrender (~34px), lobby-back (~30px)
+- Tarkista aina computed styles, ei vain CSS-sääntöjä — padding, margin ja line-height vaikuttavat todelliseen kokoon

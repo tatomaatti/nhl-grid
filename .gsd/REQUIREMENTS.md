@@ -4,28 +4,6 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Active
 
-### R001 — Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
-- Class: primary-user-loop
-- Status: active
-- Description: Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
-- Why it matters: Suurin osa käyttäjistä pelaa puhelimella
-- Source: user
-- Primary owning slice: M001/S01
-- Supporting slices: none
-- Validation: bash scripts/verify-s01.sh passaa kaikki mobiili-tarkistukset (viewport, touch targets, visualViewport) + selaintestaus mobile-viewportilla
-- Notes: viewport meta, 100svh, touch-action, visualViewport API
-
-### R002 — index.html ja nhl-grid.html eivät saa olla identtiset kopiot
-- Class: quality-attribute
-- Status: active
-- Description: index.html ja nhl-grid.html eivät saa olla identtiset kopiot
-- Why it matters: Duplikaatti aiheuttaa ylläpitovelkaa ja divergenssiriskin
-- Source: inferred
-- Primary owning slice: M001/S01
-- Supporting slices: none
-- Validation: nhl-grid.html on ≤50 riviä ja sisältää redirect index.html:iin; `diff nhl-grid.html index.html` tuottaa eroja (ei duplikaatti)
-- Notes: Toinen tiedosto pitää korvata redirectillä
-
 ### R003 — players.js on rebuildittu tuoreesta raakadatasta, audit läpäisty (0 menetettyjä pelaajia/palkintoja)
 - Class: core-capability
 - Status: active
@@ -114,6 +92,30 @@ This file is the explicit capability and coverage contract for the project.
 - Validation: unmapped
 - Notes: Filtteröinti UI-tasolla, ei datan poistoa
 
+## Validated
+
+### R001 — Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
+- Class: primary-user-loop
+- Status: validated
+- Description: Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
+- Why it matters: Suurin osa käyttäjistä pelaa puhelimella
+- Source: user
+- Primary owning slice: M001/S01
+- Supporting slices: none
+- Validation: bash scripts/verify-s01.sh passaa kaikki 21 tarkistusta (viewport, touch targets ≥44px, visualViewport, overscroll-behavior, touch-action) — vahvistettu 2026-03-21. Lopullinen mobiili-UAT (iOS Safari + Android Chrome) vaaditaan erikseen.
+- Notes: S01 toimitti: viewport meta interactive-widget, 100svh, overscroll-behavior: none, touch-action: manipulation, min 44px touch targets, visualViewport keyboard handler. Selain-emulointitestaus tehty (iPhone 15, 390×844). Fyysisen laitteen testaus vaaditaan UAT:ssa.
+
+### R002 — index.html ja nhl-grid.html eivät saa olla identtiset kopiot
+- Class: quality-attribute
+- Status: validated
+- Description: index.html ja nhl-grid.html eivät saa olla identtiset kopiot
+- Why it matters: Duplikaatti aiheuttaa ylläpitovelkaa ja divergenssiriskin
+- Source: inferred
+- Primary owning slice: M001/S01
+- Supporting slices: none
+- Validation: nhl-grid.html on 14-rivinen redirect-sivu (meta refresh + JS fallback + noscript). diff nhl-grid.html index.html tuottaa eroja. Vahvistettu verify-s01.sh:llä.
+- Notes: Kanoninen tiedosto on index.html (D002). nhl-grid.html ohjaa sinne.
+
 ## Deferred
 
 ### R014 — Ristinolla siirretään PeerJS:stä Firebase Realtime Databaseen
@@ -166,8 +168,8 @@ This file is the explicit capability and coverage contract for the project.
 
 | ID | Class | Status | Primary owner | Supporting | Proof |
 |---|---|---|---|---|---|
-| R001 | primary-user-loop | active | M001/S01 | none | bash scripts/verify-s01.sh passaa kaikki mobiili-tarkistukset (viewport, touch targets, visualViewport) + selaintestaus mobile-viewportilla |
-| R002 | quality-attribute | active | M001/S01 | none | nhl-grid.html on ≤50 riviä ja sisältää redirect index.html:iin; `diff nhl-grid.html index.html` tuottaa eroja (ei duplikaatti) |
+| R001 | primary-user-loop | validated | M001/S01 | none | bash scripts/verify-s01.sh passaa kaikki 21 tarkistusta (viewport, touch targets ≥44px, visualViewport, overscroll-behavior, touch-action) — vahvistettu 2026-03-21. Lopullinen mobiili-UAT (iOS Safari + Android Chrome) vaaditaan erikseen. |
+| R002 | quality-attribute | validated | M001/S01 | none | nhl-grid.html on 14-rivinen redirect-sivu (meta refresh + JS fallback + noscript). diff nhl-grid.html index.html tuottaa eroja. Vahvistettu verify-s01.sh:llä. |
 | R003 | core-capability | active | M001/S02 | none | unmapped |
 | R004 | primary-user-loop | active | M001/S03 | none | unmapped |
 | R005 | quality-attribute | active | M001/S04 | none | unmapped |
@@ -183,7 +185,7 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Coverage Summary
 
-- Active requirements: 10
-- Mapped to slices: 10
-- Validated: 0
+- Active requirements: 8
+- Mapped to slices: 8
+- Validated: 2 (R001, R002)
 - Unmapped active requirements: 0

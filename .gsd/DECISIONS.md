@@ -1,25 +1,10 @@
-# Decisions
+# Decisions Register
 
-## D001 — Single-file HTML säilytetään perusrakenteena
-- Scope: architecture
-- Decision: Pidetään daily.html ja nhl-grid.html single-file-muodossa, mutta erotetaan JS erillisiin tiedostoihin
-- Choice: JS eriytetään `<script src>`-tagilla, CSS pysyy HTML:n sisällä
-- Rationale: ~2300 rivin single-file on ylläpidon rajalla. JS-erotus pienentää tiedostoja ~40% ja mahdollistaa jaetun koodin. Framework-siirtymä (Astro/React) olisi ylimitoitettu tälle skaalle.
-- When: M001
-- Revisable: Yes
+<!-- Append-only. Never edit or remove existing rows.
+     To reverse a decision, add a new row that supersedes it.
+     Read this file at the start of any planning or research phase. -->
 
-## D002 — index.html on kanoninen, nhl-grid.html redirect
-- Scope: architecture
-- Decision: Kumpi tiedosto on pääsivulla?
-- Choice: index.html on kanoninen ristinollatiedosto, nhl-grid.html korvataan redirectillä
-- Rationale: index.html on GitHub Pagesin oletussivu. Duplikaatin ylläpito on riski.
-- When: M001
-- Revisable: Yes
-
-## D003 — Isolation mode: none
-- Scope: architecture
-- Decision: GSD taskien isolation-malli
-- Choice: none — ei worktreeta eikä milestone-branchia
-- Rationale: Pieni projekti, yksi aktiivinen kehittäjä, OneDrive-sijainti tekee worktree-mallista ongelmallisen
-- When: M001
-- Revisable: Yes
+| # | When | Scope | Decision | Choice | Rationale | Revisable? |
+|---|------|-------|----------|--------|-----------|------------|
+| D001 | M001/S01 | pattern | Mobiili-virtuaalinäppäimistön käsittelytapa | visualViewport resize + translateY shift — ei scrollIntoView | scrollIntoView käyttäytyy arvaamattomasti eri selaimissa (iOS Safari vs Chrome). translateY antaa täyden hallinnan siirtymän määrään ja on ennustettava. Kynnysarvo 50px estää turhat triggerit. | Yes |
+| D002 | M001 | architecture | GSD taskien isolation-malli | none — ei worktreeta eikä milestone-branchia | Pieni projekti, yksi aktiivinen kehittäjä, OneDrive-sijainti tekee worktree-mallista ongelmallisen | Yes |

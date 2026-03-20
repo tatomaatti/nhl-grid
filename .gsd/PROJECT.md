@@ -4,13 +4,15 @@ NHL Hockey Grid on kaksiosainen selainpeli: **Daily Grid** (päivittäinen Wordl
 
 ## Nykyinen tila
 
-- Toimiva daily.html (~1725 riviä, single-file HTML)
-- Toimiva nhl-grid.html / index.html (~2330 riviä, single-file HTML, identtiset kopiot)
+- Toimiva daily.html (~1750 riviä, single-file HTML, mobiilioptimoitu)
+- Toimiva index.html (~2370 riviä, single-file HTML, mobiilioptimoitu)
+- nhl-grid.html → redirect index.html:iin (14 riviä)
 - Pelaajatietokanta: ~5880 pelaajaa, ETL-pipeline valmis (fetch-raw.js → build-players-db.js → players.js)
 - Awards- ja Cup-rosterit haettu ja cachettu
 - PeerJS/WebRTC-moninpeli (väliaikainen, korvataan Firebasella)
 - GitHub Pages hosting: https://tatomaatti.github.io/nhl-grid/
-- Ei git-repoa (alustettu juuri)
+- .gitignore kunnossa, .player-cache pois git-seurannasta
+- Mobiili-UX: viewport meta, 44px touch targets, visualViewport keyboard handler, overscroll-behavior
 
 ## Pino
 
@@ -21,4 +23,4 @@ NHL Hockey Grid on kaksiosainen selainpeli: **Daily Grid** (päivittäinen Wordl
 
 ## Seuraava askel
 
-M001: Koodipohjan viimeistely — mobiilikorjaukset, duplikaatin poisto, koodin laadun parantaminen, pelaajatietokannan rebuildi.
+M001 S01 valmis. Seuraavat: S02 (pelaajatietokannan rebuild), S03 (grid-generoinnin testaus), S04 (JS-erotus), S05 (bugit + lokalisaatio).

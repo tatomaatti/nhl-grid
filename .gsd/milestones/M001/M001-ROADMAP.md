@@ -50,7 +50,7 @@
 
 ## Slices
 
-- [ ] **S01: Mobiili-UX ja duplikaatin poisto** `risk:medium` `depends:[]`
+- [x] **S01: Mobiili-UX ja duplikaatin poisto** `risk:medium` `depends:[]`
   > After this: Molemmat pelimuodot ovat pelattavia mobiilissa, nhl-grid.html ohjaa index.html:iin, .gitignore on kunnossa
 - [ ] **S02: Pelaajatietokannan rebuild ja audit** `risk:medium` `depends:[]`
   > After this: players.js on rebuildittu tuoreesta raakadatasta, audit raportoi 0 menetettyjä pelaajia/palkintoja
