@@ -552,13 +552,20 @@ button, input, [onclick], .guess-item, .col-header, .row-header, .player-cell.hi
 <!-- LOADING -->
 <div id="loading-screen" class="screen active">
   <div class="loading-spinner">🏒</div>
-  <div style="margin-top:16px;color:#888;font-size:14px;">Generoidaan päivän puzzlea...</div>
+  <div style="margin-top:16px;color:#888;font-size:14px;" data-i18n="loading">Generoidaan päivän puzzlea...</div>
 </div>
 
 <!-- GAME SCREEN -->
 <div id="game-screen" class="screen">
   <div class="daily-header">
-    <div class="daily-title">🏒 NHL GRID DAILY</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:4px;">
+      <button id="lang-switch" onclick="setLang(getCurrentLang() === 'fi' ? 'en' : 'fi')"
+              style="background:none;border:1px solid #444;border-radius:6px;color:#aaa;font-size:12px;padding:4px 10px;cursor:pointer;min-height:32px;transition:border-color 0.2s,color 0.2s;"
+              onmouseenter="this.style.borderColor='#4fc3f7';this.style.color='#4fc3f7'"
+              onmouseleave="this.style.borderColor='#444';this.style.color='#aaa'"
+              aria-label="Switch language">🇬🇧 EN</button>
+    </div>
+    <div class="daily-title" data-i18n="daily_title">🏒 NHL GRID DAILY</div>
     <div class="daily-subtitle" id="daily-date-label"></div>
     <div class="daily-number" id="daily-number-label"></div>
   </div>
@@ -568,11 +575,11 @@ button, input, [onclick], .guess-item, .col-header, .row-header, .player-cell.hi
     <div class="hints-bar" id="hints-bar" style="margin-bottom:0;"></div>
   </div>
   <div id="hint-mode-banner" class="hint-mode-banner" style="display:none;">
-    💡 Klikkaa pelaajaa käyttääksesi vihjeen
-    <button onclick="cancelHintMode()">Peruuta</button>
+    <span data-i18n="hint_mode_banner">💡 Klikkaa pelaajaa käyttääksesi vihjeen</span>
+    <button onclick="cancelHintMode()" data-i18n="hint_mode_cancel">Peruuta</button>
   </div>
-  <div class="progress-bar">
-    <span id="solved-count">0</span>/6 kategoriaa arvattu
+  <div class="progress-bar" id="progress-bar">
+    <span id="solved-count">0</span>/6 <span data-i18n="progress_suffix">kategoriaa arvattu</span>
   </div>
 
   <div class="daily-grid-wrap">
@@ -582,14 +589,14 @@ button, input, [onclick], .guess-item, .col-header, .row-header, .player-cell.hi
   <div class="daily-status" id="daily-status"></div>
 
   <div id="guess-panel" class="guess-panel" style="display:none;">
-    <div class="guess-panel-title" id="guess-panel-title">Arvaa kategoria</div>
+    <div class="guess-panel-title" id="guess-panel-title" data-i18n="guess_panel_title">Arvaa kategoria</div>
     <input type="text" class="guess-search" id="guess-search"
-           placeholder="Hae kategoriaa..." autocomplete="off" spellcheck="false">
+           placeholder="Hae kategoriaa..." data-i18n-placeholder="guess_search_placeholder" autocomplete="off" spellcheck="false">
     <div class="guess-list" id="guess-list"></div>
-    <div class="guess-panel-hint">Klikkaa kategoriaa arvataksesi</div>
+    <div class="guess-panel-hint" data-i18n="guess_panel_hint">Klikkaa kategoriaa arvataksesi</div>
   </div>
 
-  <a href="index.html" class="nav-link">← Takaisin ristinollapeliin</a>
+  <a href="index.html" class="nav-link" data-i18n="nav_back">← Takaisin ristinollapeliin</a>
 </div>
 
 <!-- END SCREEN (win or lose) -->
@@ -599,46 +606,47 @@ button, input, [onclick], .guess-item, .col-header, .row-header, .player-cell.hi
   <div class="end-stats">
     <div class="end-stat">
       <div class="end-stat-num" id="end-solved">0/6</div>
-      <div class="end-stat-label">Oikein</div>
+      <div class="end-stat-label" data-i18n="end_correct">Oikein</div>
     </div>
     <div class="end-stat">
       <div class="end-stat-num" id="end-lives">0</div>
-      <div class="end-stat-label">Elämää jäi</div>
+      <div class="end-stat-label" data-i18n="end_lives_left">Elämää jäi</div>
     </div>
     <div class="end-stat">
       <div class="end-stat-num" id="end-hints">0</div>
-      <div class="end-stat-label">Vihjettä käytetty</div>
+      <div class="end-stat-label" data-i18n="end_hints_used">Vihjettä käytetty</div>
     </div>
   </div>
 
   <div class="solution-grid" id="solution-grid"></div>
 
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-    <button class="share-btn" onclick="shareResult()">📋 Jaa tulos</button>
-    <button class="share-btn practice-btn" onclick="startPractice()">🔄 Harjoittelu</button>
+    <button class="share-btn" onclick="shareResult()" data-i18n="share_btn">📋 Jaa tulos</button>
+    <button class="share-btn practice-btn" onclick="startPractice()" data-i18n="practice_btn">🔄 Harjoittelu</button>
   </div>
   <div class="tomorrow-msg">
-    Seuraava puzzle: <span class="next-timer" id="next-timer">--:--:--</span>
+    <span data-i18n="tomorrow_msg">Seuraava puzzle:</span> <span class="next-timer" id="next-timer">--:--:--</span>
   </div>
-  <a href="index.html" class="nav-link">← Takaisin ristinollapeliin</a>
+  <a href="index.html" class="nav-link" data-i18n="nav_back">← Takaisin ristinollapeliin</a>
 </div>
 
 <!-- ALREADY PLAYED TODAY -->
 <div id="played-screen" class="screen">
-  <div class="played-title">Olet jo pelannut tänään! 🏒</div>
-  <div class="played-sub">Tule huomenna uudelleen uuden puzzlen kera.</div>
+  <div class="played-title" data-i18n="already_played">Olet jo pelannut tänään! 🏒</div>
+  <div class="played-sub" data-i18n="already_played_sub">Tule huomenna uudelleen uuden puzzlen kera.</div>
   <div class="solution-grid" id="played-solution-grid"></div>
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-    <button class="share-btn" onclick="shareResult()">📋 Jaa tulos</button>
-    <button class="share-btn practice-btn" onclick="startPractice()">🔄 Harjoittelu</button>
+    <button class="share-btn" onclick="shareResult()" data-i18n="share_btn">📋 Jaa tulos</button>
+    <button class="share-btn practice-btn" onclick="startPractice()" data-i18n="practice_btn">🔄 Harjoittelu</button>
   </div>
   <div class="tomorrow-msg">
-    Seuraava puzzle: <span class="next-timer" id="played-next-timer">--:--:--</span>
+    <span data-i18n="tomorrow_msg">Seuraava puzzle:</span> <span class="next-timer" id="played-next-timer">--:--:--</span>
   </div>
-  <a href="index.html" class="nav-link">← Takaisin ristinollapeliin</a>
+  <a href="index.html" class="nav-link" data-i18n="nav_back">← Takaisin ristinollapeliin</a>
 </div>
 
 <script src="shared.js"></script>
+<script src="lang.js"></script>
 <script src="daily-game.js"></script>
 </body>
 </html>

@@ -49,7 +49,7 @@
   - Verify: `node -c grid-game.js` (syntaksi), `bash scripts/verify-s05.sh` (steal-korjaus kohta), selaintesti
   - Done when: grid-game.js parsitaan ilman virheitä, READY-handshake löytyy koodista, stealMode asetetaan host-puolella guest-moveissa
 
-- [ ] **T02: Luo lokalisaatiojärjestelmä (lang.js) ja lokalisoi daily.html + daily-game.js** `est:1h30m`
+- [x] **T02: Luo lokalisaatiojärjestelmä (lang.js) ja lokalisoi daily.html + daily-game.js** `est:1h30m`
   - Why: R006 (FI/EN-tuki) vaatii keskitetyn käännösjärjestelmän. Daily-peli on yksinkertaisempi (vähemmän merkkijonoja), joten se on hyvä ensimmäinen kohde jolla validoidaan lokalisaatioarkkitehtuuri.
   - Files: `lang.js`, `daily.html`, `daily-game.js`, `shared.js`
   - Do: 1) Luo lang.js: STRINGS-objekti fi/en-sanakirjoineen, `t(key, ...args)`-funktio template-parametreilla, `getCurrentLang()`, `setLang(code)`, `applyLanguage()` joka päivittää kaikki `[data-i18n]`-elementit. Kielenvaihto-event `langChanged` jonka game-tiedostot voivat kuunnella. 2) Lisää shared.js:ään kansallisuuksien englanninkieliset nimet (name_en-kenttä tai lang.js:n kautta). 3) Päivitä daily.html: lisää `data-i18n`-attribuutit staattisiin teksteihin, lisää lang.js script-tagi, lisää kielenvaihtopainike headeriin. 4) Päivitä daily-game.js: korvaa kovakoodatut suomenkieliset merkkijonot `t()`-kutsuilla.

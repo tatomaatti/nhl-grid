@@ -64,6 +64,14 @@ Kansallisuusnimien lokalisointi: shared.js:n NATS-objektiin lisätään `name_en
 - `grep -q "STRINGS" lang.js` — sanakirjat löytyvät
 - Selaintesti: daily.html latautuu, kieli vaihtuu painikkeella
 
+## Observability Impact
+
+- **New signals**: `[Lang]`-prefixed console logs on language change events (`[Lang] Language set: fi`, `[Lang] Applied language to N elements`)
+- **Missing key warning**: `console.warn('[Lang] Missing key: <key>')` when `t()` is called with unknown key — allows future agents to grep console for translation gaps
+- **Inspection surface**: `getCurrentLang()` available as global function, `localStorage.getItem('nhl-grid-lang')` returns current language code
+- **Failure visibility**: If lang.js fails to load, downstream `t()` calls will throw ReferenceError visible in console; `applyLanguage()` will not execute
+- **DOM inspection**: All translatable static elements have `data-i18n` attributes — `document.querySelectorAll('[data-i18n]').length` shows coverage count
+
 ## Inputs
 
 - `shared.js` — kategoriadata johon lisätään englanninkieliset kentät

@@ -12,6 +12,8 @@ if (typeof DB === 'undefined') {
 // =====================================================================
 function buildCategoryPool() {
   const pool = [];
+  const lang = (typeof getCurrentLang === 'function') ? getCurrentLang() : 'fi';
+  const en = lang === 'en';
 
   // Teams: require >= 20 players. Pre-compute player list for fast intersection.
   Object.entries(TEAMS).forEach(([key, info]) => {
@@ -19,7 +21,8 @@ function buildCategoryPool() {
     if (players.length >= 20) {
       pool.push({
         id: 'team_' + key, key, type: 'team',
-        name: info.name, icon: info.icon, group: info.group,
+        name: info.name, icon: info.icon,
+        group: en ? (info.group_en || info.group) : info.group,
         abbr: info.abbr || info.name,
         players,
         match: p => p.t && p.t.includes(key),
@@ -33,8 +36,9 @@ function buildCategoryPool() {
     if (players.length >= 15) {
       pool.push({
         id: 'nat_' + key, key, type: 'nat',
-        name: info.name, icon: info.icon, group: info.group,
-        abbr: info.abbr || info.name,
+        name: en ? (info.name_en || info.name) : info.name, icon: info.icon,
+        group: en ? (info.group_en || info.group) : info.group,
+        abbr: en ? (info.abbr_en || info.abbr) : (info.abbr || info.name),
         players,
         match: p => p.c === key,
       });
@@ -47,7 +51,8 @@ function buildCategoryPool() {
     if (players.length >= 6) {
       pool.push({
         id: 'award_' + key, key, type: 'award',
-        name: info.name, icon: info.icon, group: info.group,
+        name: info.name, icon: info.icon,
+        group: en ? (info.group_en || info.group) : info.group,
         abbr: info.abbr || info.name,
         players,
         match: p => p.a && p.a.includes(key),
@@ -61,8 +66,9 @@ function buildCategoryPool() {
     if (players.length >= 12) {
       pool.push({
         id: 'special_' + key, key, type: 'special',
-        name: info.name, icon: info.icon, group: info.group,
-        abbr: info.name,
+        name: en ? (info.name_en || info.name) : info.name, icon: info.icon,
+        group: en ? (info.group_en || info.group) : info.group,
+        abbr: en ? (info.name_en || info.name) : info.name,
         players,
         match: info.match,
       });
@@ -113,7 +119,9 @@ function getDayNumber() {
 
 function getDailyDateLabel() {
   const d = new Date();
-  return d.toLocaleDateString('fi-FI', { day: 'numeric', month: 'long', year: 'numeric' });
+  const lang = (typeof getCurrentLang === 'function') ? getCurrentLang() : 'fi';
+  const locale = lang === 'en' ? 'en-US' : 'fi-FI';
+  return d.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 function shuffleArray(arr, rng) {
@@ -408,7 +416,7 @@ window.addEventListener('DOMContentLoaded', function() {
   if (!result) {
     // Extremely unlikely fallback
     document.getElementById('game-screen').classList.add('active');
-    document.getElementById('daily-status').textContent = '⚠️ Puzzle-generointi epäonnistui. Kokeile uudelleen.';
+    document.getElementById('daily-status').textContent = t('puzzle_gen_fail');
     document.getElementById('daily-status').style.color = '#e53935';
     return;
   }
@@ -539,7 +547,8 @@ function formatPlayerHint(p) {
     parts.push('<span class="hint-teams">🏒 ' + teamNames.join(', ') + '</span>');
   }
   if (p.c) {
-    const natName = NATS[p.c] ? NATS[p.c].name : p.c;
+    const natInfo = NATS[p.c];
+    const natName = natInfo ? catLang(natInfo).name : p.c;
     parts.push('<span class="hint-nat">🌍 ' + natName + '</span>');
   }
   if (p.a && p.a.length > 0) {
@@ -574,7 +583,7 @@ function renderGrid() {
                       <div class="header-name">${cat.abbr}</div>`;
     } else {
       el.innerHTML = `<div class="header-question">?</div>
-                      <div class="header-hint">Sarake ${c+1}</div>`;
+                      <div class="header-hint">${t('column_n', c+1)}</div>`;
       el.addEventListener('click', () => selectLine('col', c));
     }
     grid.appendChild(el);
@@ -594,7 +603,7 @@ function renderGrid() {
                       <div class="header-name">${cat.abbr}</div>`;
     } else {
       rh.innerHTML = `<div class="header-question">?</div>
-                      <div class="header-hint">Rivi ${r+1}</div>`;
+                      <div class="header-hint">${t('row_n', r+1)}</div>`;
       rh.addEventListener('click', () => selectLine('row', r));
     }
     grid.appendChild(rh);
@@ -668,7 +677,7 @@ function selectLine(type, idx) {
 
   const panel = document.getElementById('guess-panel');
   const title = document.getElementById('guess-panel-title');
-  title.textContent = `Mikä yhdistää: ${names}?`;
+  title.textContent = t('guess_panel_what_connects', names);
   panel.style.display = 'block';
 
   document.getElementById('guess-search').value = '';
@@ -742,7 +751,7 @@ function renderGuessList(query) {
     el.className = 'guess-item' + (isBlocked ? ' used' : '');
     el.innerHTML = `<span class="gi-icon">${cat.icon}</span>
                     <span>${cat.abbr}</span>
-                    <span class="gi-group">${isGloballyUsed ? '✓ Käytetty' : isWrongHere ? '✗ Kokeiltu' : cat.group}</span>`;
+                    <span class="gi-group">${isGloballyUsed ? t('used_already') : isWrongHere ? t('tried_already') : cat.group}</span>`;
     if (!isBlocked) {
       el.addEventListener('click', () => makeGuess(cat));
     }
@@ -750,7 +759,7 @@ function renderGuessList(query) {
   });
 
   if (shown.length === 0) {
-    list.innerHTML = '<div style="text-align:center;color:#555;padding:12px;font-size:13px;">Ei tuloksia</div>';
+    list.innerHTML = '<div style="text-align:center;color:#555;padding:12px;font-size:13px;">' + t('no_match') + '</div>';
   }
 }
 
@@ -821,7 +830,7 @@ function makeGuess(cat) {
     if (!G.wrongGuesses[lineKey]) G.wrongGuesses[lineKey] = new Set();
     G.wrongGuesses[lineKey].add(cat.id);
 
-    showStatus(`✗ ${cat.icon} ${cat.abbr} — ei sovi kaikkiin kolmeen`, 'wrong');
+    showStatus(t('daily_status_wrong', cat.icon, cat.abbr), 'wrong');
 
     // Flash header red
     const headerSel = `.${type === 'row' ? 'row' : 'col'}-header[data-idx="${idx}"]`;
@@ -891,7 +900,7 @@ function shareResult() {
     navigator.clipboard.writeText(G.shareText).then(() => {
       const btn = document.querySelector('.share-btn');
       const orig = btn.textContent;
-      btn.textContent = '✓ Kopioitu!';
+      btn.textContent = t('copied');
       setTimeout(() => { btn.textContent = orig; }, 2000);
     });
   }
@@ -940,8 +949,8 @@ function showEndScreen() {
   const solvedCount = G.solved.filter(Boolean).length;
   document.getElementById('end-emoji').textContent = G.won ? '🏆' : '💔';
   document.getElementById('end-subtitle').textContent = G.won
-    ? 'Loistava suoritus!'
-    : G.isPractice ? 'Kokeile uudelleen!' : 'Ei tällä kertaa. Tule huomenna takaisin!';
+    ? t('great_job')
+    : G.isPractice ? t('try_again') : t('come_back_tomorrow');
   document.getElementById('end-solved').textContent = solvedCount + '/6';
   document.getElementById('end-lives').textContent = G.lives;
   document.getElementById('end-hints').textContent = (MAX_HINTS - G.hints);
@@ -991,7 +1000,7 @@ function startPractice() {
   const result = generateDailyGrid(rng);
 
   if (!result) {
-    alert('Puzzle-generointi epäonnistui. Kokeile uudelleen.');
+    alert(t('puzzle_gen_fail'));
     return;
   }
 
@@ -1016,7 +1025,7 @@ function startPractice() {
   G.isPractice = true;
 
   // Update header
-  document.getElementById('daily-date-label').textContent = 'Harjoittelu';
+  document.getElementById('daily-date-label').textContent = t('practice_label');
   document.getElementById('daily-number-label').textContent = '#' + practiceCounter;
 
   // Hide other screens, show game
@@ -1063,3 +1072,41 @@ if (window.visualViewport) {
     lastKeyboardHeight = keyboardHeight;
   });
 }
+
+// =====================================================================
+// LANGUAGE CHANGE — rebuild localized content when language switches
+// =====================================================================
+document.addEventListener('langChanged', function() {
+  // Rebuild category pool with new language
+  G.allCats = buildCategoryPool();
+
+  // Update date label (unless in practice mode)
+  if (!G.isPractice) {
+    document.getElementById('daily-date-label').textContent = getDailyDateLabel();
+  }
+
+  // Update solved category headers with new language names
+  // Re-map rowCats/colCats abbr from shared.js data
+  G.rowCats.forEach((cat, i) => {
+    if (G.solved[i]) {
+      const updated = G.allCats.find(c => c.id === cat.id);
+      if (updated) { cat.abbr = updated.abbr; cat.group = updated.group; cat.name = updated.name; }
+    }
+  });
+  G.colCats.forEach((cat, i) => {
+    if (G.solved[3 + i]) {
+      const updated = G.allCats.find(c => c.id === cat.id);
+      if (updated) { cat.abbr = updated.abbr; cat.group = updated.group; cat.name = updated.name; }
+    }
+  });
+
+  // Re-render everything
+  if (!G.gameOver) {
+    renderGrid();
+    updateProgress();
+    // If guess panel is open, re-render the list with new language
+    if (G.selectedLine) {
+      renderGuessList(document.getElementById('guess-search').value.toLowerCase());
+    }
+  }
+});
