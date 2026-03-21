@@ -62,3 +62,9 @@ Molemmat tiedostot käyttävät globaaleja muuttujia (ei ES modules), koska sela
 
 - `shared.js` — jaettu kategoriadata, globaalit muuttujat
 - `config.js` — ICE_CONFIG (STUN/TURN-tunnukset)
+
+## Observability Impact
+
+- **Uudet signaalit:** shared.js ja config.js ovat globaaleja — puuttuvat tiedostot näkyvät 404-virheenä selainkonsolissa, puuttuvat muuttujat ReferenceError-virheenä
+- **Inspektio:** `node -e` -validointi (Function constructor) varmistaa syntaksivirheettömyyden ilman selainta
+- **Vikadiagnostiikka:** Jos jokin pelikoodin kategoriafunktio saa `undefined` arvon, se johtuu väärästä script-latausjärjestyksestä (shared.js pitää latautua ennen pelikoodia)

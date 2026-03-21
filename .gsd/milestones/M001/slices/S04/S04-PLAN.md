@@ -24,6 +24,7 @@
 - `bash scripts/verify-s04.sh` — tarkistaa tiedostojen olemassaolo, rivimäärät, inline-JS:n puuttuminen, script src -tagit, ICE_CONFIG:n sijainti
 - Selaintesti: daily.html ja index.html ladataan selaimessa, 0 JS-virheitä konsolissa, perustoiminnot toimivat (gridi renderöityy, pelaajahaku toimii)
 - Diagnostiikka: `scripts/verify-s04.sh` raportoi PASS/FAIL per tarkistus, tulostaa rivimäärät, tarkistaa ettei JS-koodia vuoda HTML-tiedostoihin
+- Failure-path: selainkonsolissa tarkistetaan 404-virheet (puuttuva script-tiedosto) ja ReferenceError-virheet (globaali muuttuja ei saatavilla latausjärjestysongelman vuoksi). verify-s04.sh tarkistaa script src -tagien järjestyksen.
 
 ## Observability / Diagnostics
 
@@ -40,7 +41,7 @@
 
 ## Tasks
 
-- [ ] **T01: Luo shared.js ja config.js — jaettu data ja konfiguraatio** `est:30m`
+- [x] **T01: Luo shared.js ja config.js — jaettu data ja konfiguraatio** `est:30m`
   - Why: TEAMS/NATS/AWARDS/SPECIALS ovat duplikoituina molemmissa HTML-tiedostoissa eri versioina. ICE_CONFIG on kovakoodattuna index.html:ssä. Nämä pitää olla yhdessä paikassa.
   - Files: `shared.js`, `config.js`
   - Do: 1) Luo shared.js joka sisältää TEAMS (33 joukkuetta, superset), NATS (11 kansallisuutta), AWARDS (10, sisältää group+desc+abbr), SPECIALS (3). Lisää PLAYABLE_AWARDS. 2) Luo config.js joka sisältää ICE_CONFIG:n (STUN/TURN). 3) Käytä globaaleja muuttujia (ei ES modules) — selain lataa `<script src>` -tagilla.

@@ -77,3 +77,9 @@
 - Testiskripti sisältää kopion daily.html:n grid-generointifunktioista (ei importoi niitä)
 - Jos daily.html:n generointia muutetaan, test-grid-gen.js pitää päivittää manuaalisesti
 - S04:n JS-erotuksessa nämä voidaan yhdistää yhteiseksi moduuliksi → importointi testiskriptiin
+
+## K016 — Node.js const-validointi: eval ei toimi, käytä Function-konstruktoria
+- `eval(code)` ei vuoda `const`-muuttujia scopeen Node.js:ssä → ReferenceError
+- `vm.createContext` + `vm.runInContext` ei myöskään aseta `const`:ia kontekstin propertyiksi
+- Toimiva tapa: `new Function(code + '; return {VAR1, VAR2};')()` — const näkyy funktion sisällä
+- Selaimessa `<script src>` toimii normaalisti const:lla — ongelma on vain Node.js-validoinnissa
