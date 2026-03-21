@@ -50,7 +50,7 @@
   - Verify: `node build-players-db.js --audit-only 2>&1 | grep -c "LOST"` = 0, ja `node -e "..."` tarkistaa position-datan olemassaolon
   - Done when: players.js ja players-full.js on rebuilditty, audit puhdas, position-data mukana
 
-- [ ] **T02: Integraatiotesti — pelit lataavat rebuildityn DB:n** `est:20m`
+- [x] **T02: Integraatiotesti — pelit lataavat rebuildityn DB:n** `est:20m`
   - Why: Rebuild voi rikkoa players.js:n formaatin tavalla joka ei näy auditissa mutta estää pelien toiminnan (esim. syntaksivirhe, muuttunut kenttänimi). Tämä varmistaa end-to-end-toimivuuden.
   - Files: `daily.html`, `index.html`, `players.js`
   - Do: 1) Avaa daily.html selaimessa ja varmista DB latautuu (ei console-virheitä). 2) Testaa haku-toiminto: kirjoita "Gretzky" ja varmista löytyy. 3) Avaa index.html ja varmista DB latautuu. 4) Testaa pelaajahaku ristinollassa. 5) Tarkista ettei selain raportoi JS-virheitä.

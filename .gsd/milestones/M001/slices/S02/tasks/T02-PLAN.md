@@ -57,6 +57,13 @@ T01 rebuild players.js tuoreesta datasta. Tämä taski varmistaa end-to-end-toim
 - `daily.html` — päivittäinen peli
 - `index.html` — ristinolla
 
+## Observability Impact
+
+- **No new runtime signals** — this task is a verification-only task, not a code change
+- **Inspection surface**: Browser console logs confirm players.js loads without errors; `DB.length` in console confirms record count
+- **Failure visibility**: JS console errors surface immediately if players.js has syntax errors or encoding issues; `typeof DB === 'undefined'` check in both HTML files shows error modal if DB fails to load
+- **Future agent note**: If this test fails, the root cause is in build-players-db.js output format, not in the HTML files
+
 ## Expected Output
 
 - `daily.html` — ei muutoksia (varmistettu toimivaksi)
