@@ -945,7 +945,7 @@ function createOnlineGame() {
   NET.peer = new Peer(NET.roomCode, { debug: 2, config: ICE_CONFIG });
 
   NET.peer.on('open', function(id) {
-    console.log('Host peer opened:', id);
+    console.log('[PeerJS] Host peer opened:', id);
   });
 
   NET.peer.on('connection', function(conn) {
@@ -954,27 +954,37 @@ function createOnlineGame() {
     document.getElementById('lobby-spinner').style.display = 'none';
 
     let connOpened = false;
+    let guestReady = false;
+    let readyTimeout = null;
 
     function onConnOpen() {
       if (connOpened) return; // prevent double-fire
       connOpened = true;
-      console.log('Host: data channel open, starting round');
-      document.getElementById('lobby-status').textContent = 'Yhteys muodostettu! Peli alkaa...';
-      setTimeout(() => startOnlineRound(), 500);
+      console.log('[PeerJS] Host: data channel open, waiting for guest READY');
+      document.getElementById('lobby-status').textContent = 'Yhteys muodostettu! Odotetaan vastustajaa...';
+
+      // 15s timeout as fallback if READY never arrives
+      readyTimeout = setTimeout(() => {
+        if (!guestReady) {
+          console.error('[PeerJS] Host: guest READY not received in 15s, starting anyway');
+          guestReady = true;
+          startOnlineRound();
+        }
+      }, 15000);
     }
 
     conn.on('open', onConnOpen);
 
     // PeerJS race condition fix: 'open' may have already fired
     if (conn.open) {
-      console.log('Host: connection was already open');
+      console.log('[PeerJS] Host: connection was already open');
       onConnOpen();
     }
 
     // Timeout: if data channel doesn't open in 15s, show error
     setTimeout(() => {
       if (!connOpened) {
-        console.error('Host: data channel did not open in 15s');
+        console.error('[PeerJS] Host: data channel did not open in 15s');
         document.getElementById('lobby-status').textContent =
           'Yhteys epäonnistui (NAT/palomuuri). Kokeile toista verkkoa tai mobiilihotspotia.';
         document.getElementById('lobby-spinner').style.display = 'none';
@@ -982,6 +992,15 @@ function createOnlineGame() {
     }, 15000);
 
     conn.on('data', function(data) {
+      // READY handshake: guest signals it's ready to receive
+      if (data.type === 'READY' && !guestReady) {
+        guestReady = true;
+        if (readyTimeout) clearTimeout(readyTimeout);
+        console.log('[PeerJS] Host: guest READY received, starting round');
+        document.getElementById('lobby-status').textContent = 'Vastustaja valmis! Peli alkaa...';
+        startOnlineRound();
+        return;
+      }
       handleGuestMessage(data);
     });
 
@@ -1033,23 +1052,25 @@ function joinOnlineGame(code) {
     function onGuestConnOpen() {
       if (guestConnOpened) return;
       guestConnOpened = true;
-      console.log('Guest: data channel open');
+      console.log('[PeerJS] Guest: data channel open, sending READY');
       document.getElementById('lobby-status').textContent = 'Yhdistetty! Odotetaan pelin alkua...';
       document.getElementById('lobby-spinner').style.display = 'none';
+      // Signal host that guest is ready to receive data
+      sendMsg({ type: 'READY' });
     }
 
     NET.conn.on('open', onGuestConnOpen);
 
     // PeerJS race condition fix: 'open' may have already fired
     if (NET.conn.open) {
-      console.log('Guest: connection was already open');
+      console.log('[PeerJS] Guest: connection was already open');
       onGuestConnOpen();
     }
 
     // Timeout: if data channel doesn't open in 15s, show error
     setTimeout(() => {
       if (!guestConnOpened) {
-        console.error('Guest: data channel did not open in 15s');
+        console.error('[PeerJS] Guest: data channel did not open in 15s');
         document.getElementById('lobby-status').textContent =
           'Yhteys epäonnistui (NAT/palomuuri). Kokeile toista verkkoa tai mobiilihotspotia.';
         document.getElementById('lobby-spinner').style.display = 'none';
@@ -1079,10 +1100,10 @@ function joinOnlineGame(code) {
 
 function sendMsg(data) {
   if (NET.conn && NET.conn.open) {
-    console.log('Sending:', data.type);
+    console.log('[PeerJS] Sending:', data.type);
     NET.conn.send(data);
   } else {
-    console.warn('sendMsg failed - conn:', !!NET.conn, 'open:', NET.conn?.open);
+    console.warn('[PeerJS] sendMsg failed - conn:', !!NET.conn, 'open:', NET.conn?.open);
   }
 }
 
@@ -1314,6 +1335,8 @@ function handleGuestMessage(data) {
     case 'MOVE': {
       // Guest is trying to play — validate on host side
       if (G.turn !== 2) return;  // not guest's turn
+      // Infer steal mode from cell ownership — host doesn't know guest's UI state
+      G.stealMode = (G.cells[data.cell].owner !== 0 && G.cells[data.cell].owner !== 2);
       validateAndApplyMove(data.cell, data.playerName, 2);
       break;
     }
@@ -1335,6 +1358,9 @@ function handleGuestMessage(data) {
       document.getElementById('btn-next-round').style.display = 'none';
       break;
     }
+
+    default:
+      console.warn('[PeerJS] Unknown guest message type:', data.type);
   }
 }
 

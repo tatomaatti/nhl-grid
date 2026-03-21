@@ -51,3 +51,11 @@ Kaksi kriittistä bugia ristinollapelissä (grid-game.js):
 ## Expected Output
 
 - `grid-game.js` — korjattu: steal-bugi fixattu, READY-handshake lisätty
+
+## Observability Impact
+
+- **New signals:** `[PeerJS] Host: data channel open, waiting for guest READY`, `[PeerJS] Host: guest READY received, starting round`, `[PeerJS] Guest: data channel open, sending READY` — console logs tracing the READY handshake lifecycle
+- **Fallback signal:** `[PeerJS] Host: guest READY not received in 15s, starting anyway` — logged when 15s timeout triggers as fallback
+- **Unknown message warning:** `[PeerJS] Unknown guest message type: <type>` — logged when handleGuestMessage receives an unrecognized message type
+- **Inspection:** Console filter `[PeerJS]` shows all connection negotiation events. `G.stealMode` is observable in debugger during guest MOVE handling on host side.
+- **Failure visibility:** If READY never arrives and timeout fires, the console error makes the fallback explicit. Steal deduction is now visible in `G.stealsLeft` state after guest steals.

@@ -42,7 +42,7 @@
 
 ## Tasks
 
-- [ ] **T01: Korjaa steal-bugi ja online-yhteyden timing-ongelma** `est:45m`
+- [x] **T01: Korjaa steal-bugi ja online-yhteyden timing-ongelma** `est:45m`
   - Why: R010 (steals ei vähene P2:lla) ja R011 (ensimmäinen online-yhteys katkeaa) ovat kriittisiä bugikorjauksia jotka pitää tehdä ennen lokalisaatiota, koska lokalisaatio muokkaa samoja tiedostoja
   - Files: `grid-game.js`
   - Do: 1) Steal-bugi: online-modessa host ei tiedä guest:n steal-tilasta — lisää `G.stealMode`-päättely hostille `handleGuestMessage`'ssa ennen `validateAndApplyMove`-kutsua: `G.stealMode = (G.cells[data.cell].owner !== 0 && G.cells[data.cell].owner !== 2)`. 2) Online-yhteys: korvaa 500ms setTimeout READY-handshakella — guest lähettää `{type:'READY'}` kun data channel avautuu, host odottaa READY:ä ennen `startOnlineRound()`-kutsua. Lisää 15s timeout varapolulle.
