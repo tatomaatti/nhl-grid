@@ -69,3 +69,9 @@ Tämä on ainoa tapa systemaattisesti todentaa R004: "Jokainen generoitu Daily G
 ## Expected Output
 
 - `test-grid-gen.js` — Node.js-testiskripti joka generoi ja validoi gridejä
+
+## Observability Impact
+
+- **New signal:** `test-grid-gen.js` tuottaa per-grid yhteenvedon (seed, kategoriatyypit, min-intersektio, fallback-status) stdouttiin. Epäonnistumiset tuottavat FAIL-rivin seedillä ja syyllä.
+- **Inspection surface:** `node test-grid-gen.js 1 --verbose` tulostaa yksittäisen gridin täydellisen rakenteen. `node test-grid-gen.js 100` laaja tilastollinen validointi.
+- **Failure state:** Exit code 1 jos yksikään grid epäonnistuu. FAIL-rivit parsittavissa `grep "FAIL"`-komennolla.

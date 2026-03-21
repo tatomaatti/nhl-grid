@@ -26,6 +26,7 @@
 - daily.html selaimessa: joukkuekategoriat näkyvät lyhenteinä (esim. "COL" ei "Colorado Avalanche")
 - daily.html selaimessa: pelaajan vihje näyttää vain pelattavia palkintoja
 - Diagnostiikka: `node test-grid-gen.js 1 --verbose` tulostaa yksittäisen gridin yksityiskohtaisen rakenteen (pelaajat, kategoriat, intersektio-koot) — diagnosointi kun generointi epäonnistuu
+- Failure-path: epäonnistunut grid tulostaa FAIL-rivin (seed, syy, yritystenmäärä) stderriin; exit code 1 kun yksikään grid epäonnistuu
 
 ## Observability / Diagnostics
 
@@ -42,7 +43,7 @@
 
 ## Tasks
 
-- [ ] **T01: Grid-generaattorin testiskripti** `est:45m`
+- [x] **T01: Grid-generaattorin testiskripti** `est:45m`
   - Why: R004 — generoinnin laatu pitää todentaa systemaattisesti. Testiskripti on ainoa tapa varmistaa, että 30+ gridiä on ratkaistavissa ja laadukkaita.
   - Files: `test-grid-gen.js` (uusi), `daily.html` (lähde generointi-logiikalle), `players.js` (pelaajadata)
   - Do: 1) Extrahoi daily.html:n generointi-funktiot (PRNG, kategoriat, generateDailyGrid, buildCategoryPool jne.) Node.js-ajettavaksi. 2) Lataa players.js vm-kontekstissa. 3) Generoi N gridiä peräkkäisillä sedeillä (alkuseed = getDailySeed(epoch) + offset). 4) Raportoi: onnistumis-%, fallback-käyttö, kategoriatyyppien jakauma, min/avg/max intersektio-koot, pelaajien fame-jakauma. 5) --verbose-flagilla tulosta yksittäisen gridin täysi rakenne. 6) Exit code 1 jos yksikään grid epäonnistuu.
