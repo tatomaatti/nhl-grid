@@ -12,7 +12,7 @@ This file is the explicit capability and coverage contract for the project.
 - Source: inferred
 - Primary owning slice: M001/S03
 - Supporting slices: none
-- Validation: unmapped
+- Validation: `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, exit code 0
 - Notes: Grid-generaattorin validointi ja testaus
 
 ### R005 — JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
@@ -67,7 +67,7 @@ This file is the explicit capability and coverage contract for the project.
 - Source: user
 - Primary owning slice: M001/S03
 - Supporting slices: none
-- Validation: unmapped
+- Validation: daily.html: `grep -c "cat\.abbr" daily.html` >= 6, joukkuekategoriat näkyvät lyhenteinä selaimessa
 - Notes: Vaikuttaa grid-renderöintiin ja guess-paneliin
 
 ### R013 — Pelaajien palkinnot jotka eivät ole pelissä kategorioina (esim. MarkMessierLeadershipAward) eivät näy vihjeissä eikä UI:ssa, mutta säilytetään databasessa
@@ -78,7 +78,7 @@ This file is the explicit capability and coverage contract for the project.
 - Source: user
 - Primary owning slice: M001/S03
 - Supporting slices: none
-- Validation: unmapped
+- Validation: `grep -c "PLAYABLE_AWARDS" daily.html` >= 2, formatPlayerHint filtteröi ei-pelattavat palkinnot
 - Notes: Filtteröinti UI-tasolla, ei datan poistoa
 
 ## Validated
@@ -171,13 +171,13 @@ This file is the explicit capability and coverage contract for the project.
 | R001 | primary-user-loop | validated | M001/S01 | none | bash scripts/verify-s01.sh passaa kaikki 21 tarkistusta (viewport, touch targets ≥44px, visualViewport, overscroll-behavior, touch-action) — vahvistettu 2026-03-21. Lopullinen mobiili-UAT (iOS Safari + Android Chrome) vaaditaan erikseen. |
 | R002 | quality-attribute | validated | M001/S01 | none | nhl-grid.html on 14-rivinen redirect-sivu (meta refresh + JS fallback + noscript). diff nhl-grid.html index.html tuottaa eroja. Vahvistettu verify-s01.sh:llä. |
 | R003 | core-capability | validated | M001/S02 | none | S02 T01: audit 0 lost players/awards, spot-check 5 pelaajaa (Gretzky, Crosby, Ovechkin, Selänne, McDavid). S02 T02: selaintesti daily.html + index.html, DB.length === 5880 molemmissa, pelaajahaku toimii, 0 JS-virheitä. Kaikki 10 verifikaatiota läpi. Vahvistettu 2026-03-21. |
-| R004 | primary-user-loop | active | M001/S03 | none | unmapped |
+| R004 | primary-user-loop | active | M001/S03 | none | `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, exit code 0 |
 | R005 | quality-attribute | active | M001/S04 | none | unmapped |
 | R006 | primary-user-loop | active | M001/S05 | none | unmapped |
 | R010 | core-capability | active | M001/S05 | none | unmapped |
 | R011 | core-capability | active | M001/S05 | none | unmapped |
-| R012 | primary-user-loop | active | M001/S03 | none | unmapped |
-| R013 | primary-user-loop | active | M001/S03 | none | unmapped |
+| R012 | primary-user-loop | active | M001/S03 | none | daily.html: `grep -c "cat\.abbr" daily.html` >= 6, joukkuekategoriat näkyvät lyhenteinä selaimessa |
+| R013 | primary-user-loop | active | M001/S03 | none | `grep -c "PLAYABLE_AWARDS" daily.html` >= 2, formatPlayerHint filtteröi ei-pelattavat palkinnot |
 | R014 | core-capability | deferred | none | none | unmapped |
 | R015 | launchability | deferred | none | none | unmapped |
 | R016 | launchability | deferred | none | none | unmapped |
