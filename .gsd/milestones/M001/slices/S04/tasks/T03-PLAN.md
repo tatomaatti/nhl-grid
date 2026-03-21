@@ -88,6 +88,12 @@ CSS pysyy index.html:n sisällä (projektikonventio).
 - `daily.html` — T02:n muokkaama (verify-s04.sh tarkistaa myös tämän)
 - `daily-game.js` — T02:n tuottama (verify-s04.sh tarkistaa myös tämän)
 
+## Observability Impact
+
+- **New signals:** `Error: players.js not loaded — DB is undefined` konsolissa jos latausjärjestys virheellinen grid-game.js:ssä. `[MobileUX]` visualViewport-lokit säilyvät grid-game.js:ssä.
+- **Inspection:** `bash scripts/verify-s04.sh` — kokonaiskuva koko slicen tiedostorakenteesta: tiedostojen olemassaolo, rivimäärät, inline-JS:n puuttuminen, script-tagien järjestys, jaettujen muuttujien sijainti.
+- **Failure visibility:** Script-latausvirheet (404) ja ReferenceError-virheet (globaali puuttuu) näkyvät selainkonsolissa. verify-s04.sh tarkistaa staattisesti.
+
 ## Expected Output
 
 - `grid-game.js` — Ristinolla-pelilogiikka, eriytetty JS-tiedosto

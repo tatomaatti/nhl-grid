@@ -55,7 +55,7 @@
   - Verify: `bash scripts/verify-s04.sh` PASS daily-osioissa + selaintesti (gridi renderöityy, pelaajahaku toimii, 0 JS-virheitä)
   - Done when: daily.html ei sisällä inline-JS:ää, daily-game.js toimii, peli pelattavissa
 
-- [ ] **T03: Eristä grid-game.js, päivitä index.html ja luo verify-s04.sh** `est:45m`
+- [x] **T03: Eristä grid-game.js, päivitä index.html ja luo verify-s04.sh** `est:45m`
   - Why: index.html:n ~1460 riviä inline-JS:ää siirretään erilliseen tiedostoon. Slicen verifiointiskripti viimeistelee.
   - Files: `grid-game.js`, `index.html`, `scripts/verify-s04.sh`
   - Do: 1) Siirrä index.html:n `<script>`-blokin sisältö grid-game.js:ään. Poista kategoriadefinitiot (tulevat shared.js:stä) ja ICE_CONFIG (tulee config.js:stä). 2) Korvaa inline-script `<script src>`-tageilla: players.js → shared.js → config.js → peerjs CDN → grid-game.js. 3) Poista DB-puuttumisen tarkistus inline-scriptistä (siirtyy grid-game.js:n alkuun). 4) Varmista visualViewport-handler ja URL auto-join säilyvät. 5) Luo scripts/verify-s04.sh joka tarkistaa: tiedostojen olemassaolo, HTML-rivimäärät < 1000, ei inline-JS:ää, script src -tagit oikeassa järjestyksessä, ICE_CONFIG config.js:ssä. 6) Testaa selaimessa.
