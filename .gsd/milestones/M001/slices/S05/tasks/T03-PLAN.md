@@ -78,3 +78,10 @@ Lokalisaatio käyttää T02:ssa luotua `lang.js`-infrastruktuuria: `t(key)`, `da
 - `index.html` — muokattu: data-i18n, lang.js script-tagi, kielenvaihtopainike
 - `grid-game.js` — muokattu: t()-kutsut kovakoodattujen merkkijonojen tilalla, langChanged-kuuntelija
 - `scripts/verify-s05.sh` — uusi: koko S05-slicen verifiointiskripti
+
+## Observability Impact
+
+- **New signal:** `langChanged` event listener in grid-game.js re-renders grid headers and updates player labels when language changes during a game
+- **Inspection:** `getCurrentLang()` returns current language; `t('any_key')` tests any translation key for the ristinolla context
+- **Failure visibility:** Missing translation keys logged as `[Lang] Missing key: <key>` in browser console
+- **Category localization:** `catHeaderHTML()` now uses `catLang()` for localized abbreviations and descriptions in grid headers — inspect grid cells to verify category labels match current language

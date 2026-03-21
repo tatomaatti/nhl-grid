@@ -690,11 +690,18 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
 
 <!-- ===== SETTINGS SCREEN ===== -->
 <div id="settings-screen">
-  <div class="settings-title">🏒 NHL Hockey Grid</div>
-  <div class="settings-subtitle">Löydä oikea pelaaja jokaiseen ruutuun — 3 peräkkäin voittaa</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+    <button id="lang-switch" onclick="setLang(getCurrentLang() === 'fi' ? 'en' : 'fi')"
+            style="background:none;border:1px solid #444;border-radius:6px;color:#aaa;font-size:12px;padding:4px 10px;cursor:pointer;min-height:32px;transition:border-color 0.2s,color 0.2s;"
+            onmouseenter="this.style.borderColor='#4fc3f7';this.style.color='#4fc3f7'"
+            onmouseleave="this.style.borderColor='#444';this.style.color='#aaa'"
+            aria-label="Switch language">🇬🇧 EN</button>
+  </div>
+  <div class="settings-title" data-i18n="grid_title">🏒 NHL Hockey Grid</div>
+  <div class="settings-subtitle" data-i18n="grid_subtitle">Löydä oikea pelaaja jokaiseen ruutuun — 3 peräkkäin voittaa</div>
 
   <div class="setting-group">
-    <div class="setting-label">Vuoron aikaraja</div>
+    <div class="setting-label" data-i18n="time_limit">Vuoron aikaraja</div>
     <div class="setting-options" id="time-options">
       <div class="option-btn" data-value="30">30s</div>
       <div class="option-btn active" data-value="60">60s</div>
@@ -704,17 +711,17 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
   </div>
 
   <div class="setting-group">
-    <div class="setting-label">Peliasetukset</div>
+    <div class="setting-label" data-i18n="settings_label">Peliasetukset</div>
     <div class="toggle-row">
-      <span class="toggle-label">Sama pelaaja useampaan ruutuun</span>
+      <span class="toggle-label" data-i18n="reuse_label">Sama pelaaja useampaan ruutuun</span>
       <button class="toggle" id="tog-reuse" onclick="toggleOpt('reuse')"></button>
     </div>
     <div class="toggle-row">
-      <span class="toggle-label">Ruudun varastaminen</span>
+      <span class="toggle-label" data-i18n="steal_label">Ruudun varastaminen</span>
       <button class="toggle on" id="tog-steal" onclick="toggleOpt('steal')"></button>
     </div>
     <div class="steal-count-row visible" id="steal-count-row">
-      <span class="steal-count-label">Varastuksia per pelaaja</span>
+      <span class="steal-count-label" data-i18n="steal_count_label">Varastuksia per pelaaja</span>
       <div class="steal-count-btns">
         <button onclick="setStealCount(1)" class="active" id="sc-1">1</button>
         <button onclick="setStealCount(2)" id="sc-2">2</button>
@@ -722,11 +729,11 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
       </div>
     </div>
     <div class="toggle-row">
-      <span class="toggle-label">💡 Vihjeet</span>
+      <span class="toggle-label" data-i18n="hints_label">💡 Vihjeet</span>
       <button class="toggle" id="tog-hints" onclick="toggleOpt('hints')"></button>
     </div>
     <div class="steal-count-row" id="hint-count-row">
-      <span class="steal-count-label">Vihjeitä per pelaaja</span>
+      <span class="steal-count-label" data-i18n="hint_count_label">Vihjeitä per pelaaja</span>
       <div class="steal-count-btns">
         <button onclick="setHintCount(1)" class="active" id="hc-1">1</button>
         <button onclick="setHintCount(2)" id="hc-2">2</button>
@@ -737,13 +744,13 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
   </div>
 
   <div class="setting-group">
-    <div class="setting-label">Kategoriat</div>
+    <div class="setting-label" data-i18n="categories_label">Kategoriat</div>
     <div class="toggle-row">
-      <span class="toggle-label">🏒 NHL-joukkueet (aina päällä)</span>
+      <span class="toggle-label" data-i18n="teams_always_on">🏒 NHL-joukkueet (aina päällä)</span>
       <button class="toggle on" disabled style="opacity:0.4;cursor:default"></button>
     </div>
     <div class="weight-sub-row visible" id="weight-row-team">
-      <span class="weight-sub-label">Painotus</span>
+      <span class="weight-sub-label" data-i18n="weight_label">Painotus</span>
       <div class="weight-btns" id="wb-team">
         <button onclick="setWeight('team',1)">1</button>
         <button onclick="setWeight('team',2)">2</button>
@@ -753,11 +760,11 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
       </div>
     </div>
     <div class="toggle-row">
-      <span class="toggle-label">🌍 Kansallisuudet</span>
+      <span class="toggle-label" data-i18n="nats_label">🌍 Kansallisuudet</span>
       <button class="toggle" id="tog-nat" onclick="toggleOpt('nat')"></button>
     </div>
     <div class="weight-sub-row" id="weight-row-nat">
-      <span class="weight-sub-label">Painotus</span>
+      <span class="weight-sub-label" data-i18n="weight_label">Painotus</span>
       <div class="weight-btns" id="wb-nat">
         <button onclick="setWeight('nat',1)">1</button>
         <button onclick="setWeight('nat',2)">2</button>
@@ -767,11 +774,11 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
       </div>
     </div>
     <div class="toggle-row">
-      <span class="toggle-label">🏆 Palkinnot</span>
+      <span class="toggle-label" data-i18n="awards_label">🏆 Palkinnot</span>
       <button class="toggle" id="tog-awards" onclick="toggleOpt('awards')"></button>
     </div>
     <div class="weight-sub-row" id="weight-row-awards">
-      <span class="weight-sub-label">Painotus</span>
+      <span class="weight-sub-label" data-i18n="weight_label">Painotus</span>
       <div class="weight-btns" id="wb-awards">
         <button onclick="setWeight('awards',1)">1</button>
         <button onclick="setWeight('awards',2)">2</button>
@@ -783,7 +790,7 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
   </div>
 
   <div class="setting-group">
-    <div class="setting-label">Pelimuoto (Best-of)</div>
+    <div class="setting-label" data-i18n="bestof_label">Pelimuoto (Best-of)</div>
     <div class="setting-options" id="bestof-options">
       <div class="option-btn" data-value="3">Bo3</div>
       <div class="option-btn" data-value="5">Bo5</div>
@@ -793,40 +800,40 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
   </div>
 
   <div class="start-btn-wrap">
-    <button class="start-btn" onclick="startGame()">▶ PAIKALLINEN</button>
-    <button class="start-btn online-btn" onclick="createOnlineGame()">🌐 NETTIPELI</button>
+    <button class="start-btn" onclick="startGame()" data-i18n="btn_local">▶ PAIKALLINEN</button>
+    <button class="start-btn online-btn" onclick="createOnlineGame()" data-i18n="btn_online">🌐 NETTIPELI</button>
   </div>
   <div style="text-align:center;margin-top:16px;">
     <a href="daily.html" style="color:#4fc3f7;font-size:14px;font-weight:700;text-decoration:none;
        background:#0d2137;border:1.5px solid #4fc3f7;border-radius:10px;padding:10px 24px;display:inline-block;
-       transition:background 0.2s;">📅 DAILY PUZZLE</a>
+       transition:background 0.2s;" data-i18n="btn_daily">📅 DAILY PUZZLE</a>
   </div>
 </div>
 
 <!-- ===== LOBBY SCREEN ===== -->
 <div id="lobby-screen">
-  <div class="lobby-title" id="lobby-title">Odotetaan vastustajaa...</div>
+  <div class="lobby-title" id="lobby-title" data-i18n="waiting_opponent">Odotetaan vastustajaa...</div>
   <div class="room-code" id="room-code-display"></div>
-  <button class="copy-btn" id="copy-btn" onclick="copyRoomCode()" style="display:none">📋 Kopioi linkki</button>
+  <button class="copy-btn" id="copy-btn" onclick="copyRoomCode()" style="display:none" data-i18n="copy_link">📋 Kopioi linkki</button>
   <div class="lobby-status" id="lobby-status"></div>
   <div class="waiting-spinner" id="lobby-spinner"></div>
 
   <div class="lobby-join-section" id="lobby-join-section" style="display:none">
-    <div style="font-size:13px;color:#888;margin-bottom:8px">Liity peliin koodilla</div>
+    <div style="font-size:13px;color:#888;margin-bottom:8px" data-i18n="join_by_code">Liity peliin koodilla</div>
     <div class="lobby-join-row">
       <input type="text" class="lobby-join-input" id="join-code-input" placeholder="XXXXX" maxlength="5">
-      <button class="lobby-join-btn" onclick="joinFromInput()">Liity</button>
+      <button class="lobby-join-btn" onclick="joinFromInput()" data-i18n="join_btn">Liity</button>
     </div>
   </div>
 
-  <button class="lobby-back-btn" onclick="goMenu()">← Valikko</button>
+  <button class="lobby-back-btn" onclick="goMenu()" data-i18n="back_menu">← Valikko</button>
 </div>
 
 <!-- ===== DISCONNECT SCREEN ===== -->
 <div id="disconnect-screen">
-  <div class="disconnect-title">❌ Yhteys katkesi</div>
-  <div class="disconnect-text">Verkkoyhteys vastustajaan on katkennut.</div>
-  <button class="btn-rematch" onclick="goMenu()" style="margin-top:16px">← Valikko</button>
+  <div class="disconnect-title" data-i18n="disconnected_title">❌ Yhteys katkesi</div>
+  <div class="disconnect-text" data-i18n="disconnected_text">Verkkoyhteys vastustajaan on katkennut.</div>
+  <button class="btn-rematch" onclick="goMenu()" style="margin-top:16px" data-i18n="back_menu">← Valikko</button>
 </div>
 
 <!-- ===== GAME SCREEN ===== -->
@@ -834,16 +841,16 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
   <div class="game-header">
     <div class="player-info" id="p1-info">
       <div class="player-dot p1-dot"></div>
-      <span class="player-name-label" id="p1-label">Pelaaja 1</span>
+      <span class="player-name-label" id="p1-label" data-i18n="player_1">Pelaaja 1</span>
       <span class="player-score" id="p1-score">0</span>
     </div>
     <div class="timer-wrap">
       <div class="timer-val" id="timer-val">60</div>
-      <button class="surrender-btn" onclick="openSurrenderModal()">✕ Luovuta</button>
+      <button class="surrender-btn" onclick="openSurrenderModal()">✕ <span data-i18n="surrender_confirm">Luovuta</span></button>
     </div>
     <div class="player-info p2" id="p2-info">
       <div class="player-dot p2-dot"></div>
-      <span class="player-name-label" id="p2-label">Pelaaja 2</span>
+      <span class="player-name-label" id="p2-label" data-i18n="player_2">Pelaaja 2</span>
       <span class="player-score" id="p2-score">0</span>
     </div>
   </div>
@@ -851,22 +858,22 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
   <div class="series-bar" id="series-bar" style="display:none"></div>
 
   <div class="turn-bar">
-    Vuorossa: <span class="turn-name" id="turn-name">Pelaaja 1</span>
+    <span data-i18n="turn_label">Vuorossa:</span> <span class="turn-name" id="turn-name" data-i18n="player_1">Pelaaja 1</span>
   </div>
 
   <div class="steal-bar" id="steal-bar">
-    <span>⚡ P1 varastuksia: <strong id="p1-steals">1</strong></span>
-    <span>⚡ P2 varastuksia: <strong id="p2-steals">1</strong></span>
+    <span><span data-i18n="steal_p1">⚡ P1 varastuksia:</span> <strong id="p1-steals">1</strong></span>
+    <span><span data-i18n="steal_p2">⚡ P2 varastuksia:</span> <strong id="p2-steals">1</strong></span>
   </div>
 
   <div class="search-wrap">
     <input type="text" class="search-input" id="search-input"
-      placeholder="Valitse ensin ruutu..." disabled autocomplete="off">
+      placeholder="Valitse ensin ruutu..." data-i18n-placeholder="select_cell_first" disabled autocomplete="off">
     <div class="suggestions" id="suggestions" style="display:none"></div>
   </div>
 
   <div class="hint-bar" id="hint-bar" style="display:none">
-    <button class="hint-btn" id="hint-btn" onclick="useHint()">💡 Vihje</button>
+    <button class="hint-btn" id="hint-btn" onclick="useHint()" data-i18n="hint_btn_label">💡 Vihje</button>
     <span class="hint-remaining" id="hint-remaining"></span>
   </div>
   <div class="hint-display" id="hint-display"></div>
@@ -881,11 +888,11 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
 <!-- ===== SURRENDER MODAL ===== -->
 <div class="surrender-modal" id="surrender-modal">
   <div class="surrender-box">
-    <h3>🏳️ Luovuta?</h3>
-    <p>Peli loppuu ja palataan valikkoon.<br>Tulos ei tallennu.</p>
+    <h3 data-i18n="surrender_title">🏳️ Luovuta?</h3>
+    <p data-i18n="surrender_text">Peli loppuu ja palataan valikkoon.<br>Tulos ei tallennu.</p>
     <div class="surrender-actions">
-      <button class="btn-confirm-surrender" onclick="confirmSurrender()">Luovuta</button>
-      <button class="btn-cancel-surrender" onclick="closeSurrenderModal()">Peruuta</button>
+      <button class="btn-confirm-surrender" onclick="confirmSurrender()" data-i18n="surrender_confirm">Luovuta</button>
+      <button class="btn-cancel-surrender" onclick="closeSurrenderModal()" data-i18n="cancel">Peruuta</button>
     </div>
   </div>
 </div>
@@ -893,11 +900,11 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
 <!-- ===== WIN SCREEN ===== -->
 <div id="win-screen">
   <div class="win-trophy">🏆</div>
-  <div class="win-title">Voittaja</div>
+  <div class="win-title" data-i18n="winner">Voittaja</div>
   <div class="win-player" id="win-player"></div>
   <div class="win-btns" id="win-btns">
-    <button class="btn-rematch" id="btn-next-round" onclick="nextRound()">Seuraava erä</button>
-    <button class="btn-menu" onclick="goMenu()">Valikko</button>
+    <button class="btn-rematch" id="btn-next-round" onclick="nextRound()" data-i18n="next_round">Seuraava erä</button>
+    <button class="btn-menu" onclick="goMenu()" data-i18n="menu">Valikko</button>
   </div>
 </div>
 
@@ -908,14 +915,15 @@ button, input, select, textarea, [onclick], .sug-item, .cell, .hint-btn, .catego
     <div class="round-result-text" id="round-result-text"></div>
     <div class="round-series-text" id="round-series-text"></div>
     <div class="round-btns" id="round-btns">
-      <button class="btn-rematch" id="round-next-btn" onclick="nextRound()">Seuraava erä</button>
-      <button class="btn-menu" onclick="goMenu()">Valikko</button>
+      <button class="btn-rematch" id="round-next-btn" onclick="nextRound()" data-i18n="next_round">Seuraava erä</button>
+      <button class="btn-menu" onclick="goMenu()" data-i18n="menu">Valikko</button>
     </div>
   </div>
 </div>
 
 <script src="players.js"></script>
 <script src="shared.js"></script>
+<script src="lang.js"></script>
 <script src="config.js"></script>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script src="grid-game.js"></script>

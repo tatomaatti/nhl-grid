@@ -94,6 +94,125 @@ const STRINGS = {
     special_one_club:    'Pelannut vain yhdessä joukkueessa',
     special_multi_cup:   'Voittanut Stanley Cupin vähintään 3×',
     special_five_teams:  'Pelannut vähintään 5 joukkueessa',
+
+    // ── Grid Ristinolla ─────────────────────────────────────────────
+    // Settings
+    grid_title:          '🏒 NHL Hockey Grid',
+    grid_subtitle:       'Löydä oikea pelaaja jokaiseen ruutuun — 3 peräkkäin voittaa',
+    time_limit:          'Vuoron aikaraja',
+    settings_label:      'Peliasetukset',
+    reuse_label:         'Sama pelaaja useampaan ruutuun',
+    steal_label:         'Ruudun varastaminen',
+    steal_count_label:   'Varastuksia per pelaaja',
+    hints_label:         '💡 Vihjeet',
+    hint_count_label:    'Vihjeitä per pelaaja',
+    categories_label:    'Kategoriat',
+    teams_always_on:     '🏒 NHL-joukkueet (aina päällä)',
+    nats_label:          '🌍 Kansallisuudet',
+    awards_label:        '🏆 Palkinnot',
+    weight_label:        'Painotus',
+    bestof_label:        'Pelimuoto (Best-of)',
+    btn_local:           '▶ PAIKALLINEN',
+    btn_online:          '🌐 NETTIPELI',
+    btn_daily:           '📅 DAILY PUZZLE',
+
+    // Lobby
+    waiting_opponent:    'Odotetaan vastustajaa...',
+    copy_link:           '📋 Kopioi linkki',
+    share_code:          'Jaa koodi tai linkki kaverille',
+    join_by_code:        'Liity peliin koodilla',
+    join_btn:            'Liity',
+    back_menu:           '← Valikko',
+    connecting:          'Yhdistetään...',
+    room_label:          'Huone: {0}',
+    connected_ready:     'Vastustaja valmis! Peli alkaa...',
+    connected_waiting:   'Yhteys muodostettu! Odotetaan vastustajaa...',
+    opponent_connected:  'Vastustaja yhdistyi!',
+    connected_guest:     'Yhdistetty! Odotetaan pelin alkua...',
+    connection_failed_nat: 'Yhteys epäonnistui (NAT/palomuuri). Kokeile toista verkkoa tai mobiilihotspotia.',
+    connection_failed_check: 'Yhteys epäonnistui. Tarkista koodi.',
+    connection_error:    'Yhteysvirhe: {0}',
+
+    // Game
+    player_1:            'Pelaaja 1',
+    player_2:            'Pelaaja 2',
+    you_label:           'Sinä',
+    opponent:            'Vastustaja',
+    your_turn:           'Sinun vuorosi!',
+    opponent_turn:       'Vastustajan vuoro...',
+    player_turn:         'Pelaaja {0}',
+    select_cell_first:   'Valitse ensin ruutu...',
+    search_placeholder:  'Hae NHL-pelaajaa...',
+    waiting_label:       'Odotetaan...',
+    find_player:         'FIND PLAYER',
+    surrender_title:     '🏳️ Luovuta?',
+    surrender_text:      'Peli loppuu ja palataan valikkoon.\nTulos ei tallennu.',
+    surrender_confirm:   'Luovuta',
+    cancel:              'Peruuta',
+    turn_label:          'Vuorossa:',
+
+    // Steal/hints
+    steal_tag:           '⚡STEAL',
+    steal_status:        '⚡ Varastetaan pelaaja {0}:n ruutu! Löydä eri pelaaja.',
+    steal_p1:            '⚡ P1 varastuksia:',
+    steal_p2:            '⚡ P2 varastuksia:',
+    steal_need_different:'Varastukseen tarvitaan eri pelaaja!',
+    hint_btn_label:      '💡 Vihje',
+    hint_no_players:     'Ei sopivia pelaajia jäljellä!',
+    hint_unlimited:      '(rajaton)',
+    hint_remaining:      '({0} jäljellä)',
+    used_label:          '(käytetty)',
+
+    // Grid generation
+    grid_gen_fail:       'Ei löydy sopivaa ruudukkoa. Kokeile lisätä kategorioita asetuksista.',
+
+    // Validation errors
+    player_not_found:    'Pelaajaa "{0}" ei löydy tietokannasta.',
+    player_already_used: '{0} on jo käytetty!',
+    wrong_guess:         'Väärin! {0} ei sovi: {1} × {2}.',
+
+    // Results
+    winner:              'Voittaja',
+    you_won_round:       'Voitit erän!',
+    you_lost_round:      'Vastustaja voitti erän',
+    player_won_round:    'Pelaaja {0} voitti erän!',
+    draw:                'Tasapeli!',
+    series_format:       'Sarja: {0} – {1}  ·  {2} seuraavan erän',
+    you_start:           'Sinä aloitat',
+    opponent_starts:     'Vastustaja aloittaa',
+    player_starts:       'Pelaaja {0} aloittaa',
+    next_round:          'Seuraava erä',
+    menu:                'Valikko',
+    waiting_host:        'Odotetaan hostia...',
+    free_series:         'Vapaa sarja',
+    round_format:        'Erä {0} | {1} — {2} – {3}',
+
+    // Series end
+    you_won_series:      'Voitit sarjan!',
+    you_lost_series:     'Hävisit sarjan',
+    bestof_winner:       'Best of {0} — Voittaja',
+    player_label:        'Pelaaja {0}',
+    new_series:          'Uusi sarja',
+
+    // Online misc
+    opponent_played:     'Vastustaja pelasi: {0}',
+    opponent_time_up:    'Vastustajan aika loppui! Sinun vuorosi.',
+    time_up:             'Aika loppui! Vuoro siirtyi.',
+    opponent_wrong:      'Vastustaja arvasi väärin. Sinun vuorosi!',
+    wrong_opp_turn:      'Väärin. Vastustajan vuoro.',
+    opponent_surrendered:'Vastustaja luovutti!',
+    you_won:             'Voitit!',
+    code_copied:         '✓ Kopioitu!',
+    code_only_copied:    '✓ Koodi kopioitu!',
+
+    // Disconnect
+    disconnected_title:  '❌ Yhteys katkesi',
+    disconnected_text:   'Verkkoyhteys vastustajaan on katkennut.',
+
+    // DB error
+    db_missing_title:    'players.js puuttuu!',
+    db_missing_text:     'Tiedostoa players.js ei löydy.',
+    db_missing_hint:     'Varmista että molemmat tiedostot ovat samassa kansiossa:',
   },
 
   en: {
@@ -186,6 +305,125 @@ const STRINGS = {
     special_one_club:    'Played for only one team',
     special_multi_cup:   'Won Stanley Cup 3+ times',
     special_five_teams:  'Played for 5+ teams',
+
+    // ── Grid Ristinolla ─────────────────────────────────────────────
+    // Settings
+    grid_title:          '🏒 NHL Hockey Grid',
+    grid_subtitle:       'Find the right player for each cell — 3 in a row wins',
+    time_limit:          'Turn time limit',
+    settings_label:      'Game settings',
+    reuse_label:         'Same player in multiple cells',
+    steal_label:         'Cell stealing',
+    steal_count_label:   'Steals per player',
+    hints_label:         '💡 Hints',
+    hint_count_label:    'Hints per player',
+    categories_label:    'Categories',
+    teams_always_on:     '🏒 NHL Teams (always on)',
+    nats_label:          '🌍 Nationalities',
+    awards_label:        '🏆 Awards',
+    weight_label:        'Weight',
+    bestof_label:        'Game mode (Best-of)',
+    btn_local:           '▶ LOCAL',
+    btn_online:          '🌐 ONLINE',
+    btn_daily:           '📅 DAILY PUZZLE',
+
+    // Lobby
+    waiting_opponent:    'Waiting for opponent...',
+    copy_link:           '📋 Copy link',
+    share_code:          'Share code or link with a friend',
+    join_by_code:        'Join game with code',
+    join_btn:            'Join',
+    back_menu:           '← Menu',
+    connecting:          'Connecting...',
+    room_label:          'Room: {0}',
+    connected_ready:     'Opponent ready! Game starting...',
+    connected_waiting:   'Connected! Waiting for opponent...',
+    opponent_connected:  'Opponent connected!',
+    connected_guest:     'Connected! Waiting for game to start...',
+    connection_failed_nat: 'Connection failed (NAT/firewall). Try another network or mobile hotspot.',
+    connection_failed_check: 'Connection failed. Check the code.',
+    connection_error:    'Connection error: {0}',
+
+    // Game
+    player_1:            'Player 1',
+    player_2:            'Player 2',
+    you_label:           'You',
+    opponent:            'Opponent',
+    your_turn:           'Your turn!',
+    opponent_turn:       'Opponent\'s turn...',
+    player_turn:         'Player {0}',
+    select_cell_first:   'Select a cell first...',
+    search_placeholder:  'Search NHL player...',
+    waiting_label:       'Waiting...',
+    find_player:         'FIND PLAYER',
+    surrender_title:     '🏳️ Surrender?',
+    surrender_text:      'The game will end and return to menu.\nResult will not be saved.',
+    surrender_confirm:   'Surrender',
+    cancel:              'Cancel',
+    turn_label:          'Turn:',
+
+    // Steal/hints
+    steal_tag:           '⚡STEAL',
+    steal_status:        '⚡ Stealing player {0}\'s cell! Find a different player.',
+    steal_p1:            '⚡ P1 steals:',
+    steal_p2:            '⚡ P2 steals:',
+    steal_need_different:'A different player is needed for stealing!',
+    hint_btn_label:      '💡 Hint',
+    hint_no_players:     'No valid players remaining!',
+    hint_unlimited:      '(unlimited)',
+    hint_remaining:      '({0} left)',
+    used_label:          '(used)',
+
+    // Grid generation
+    grid_gen_fail:       'No valid grid found. Try adding more categories in settings.',
+
+    // Validation errors
+    player_not_found:    'Player "{0}" not found in database.',
+    player_already_used: '{0} has already been used!',
+    wrong_guess:         'Wrong! {0} doesn\'t fit: {1} × {2}.',
+
+    // Results
+    winner:              'Winner',
+    you_won_round:       'You won the round!',
+    you_lost_round:      'Opponent won the round',
+    player_won_round:    'Player {0} won the round!',
+    draw:                'Draw!',
+    series_format:       'Series: {0} – {1}  ·  {2} starts next round',
+    you_start:           'You start',
+    opponent_starts:     'Opponent starts',
+    player_starts:       'Player {0} starts',
+    next_round:          'Next round',
+    menu:                'Menu',
+    waiting_host:        'Waiting for host...',
+    free_series:         'Free series',
+    round_format:        'Round {0} | {1} — {2} – {3}',
+
+    // Series end
+    you_won_series:      'You won the series!',
+    you_lost_series:     'You lost the series',
+    bestof_winner:       'Best of {0} — Winner',
+    player_label:        'Player {0}',
+    new_series:          'New series',
+
+    // Online misc
+    opponent_played:     'Opponent played: {0}',
+    opponent_time_up:    'Opponent\'s time is up! Your turn.',
+    time_up:             'Time\'s up! Turn switched.',
+    opponent_wrong:      'Opponent guessed wrong. Your turn!',
+    wrong_opp_turn:      'Wrong. Opponent\'s turn.',
+    opponent_surrendered:'Opponent surrendered!',
+    you_won:             'You won!',
+    code_copied:         '✓ Copied!',
+    code_only_copied:    '✓ Code copied!',
+
+    // Disconnect
+    disconnected_title:  '❌ Disconnected',
+    disconnected_text:   'Connection to opponent has been lost.',
+
+    // DB error
+    db_missing_title:    'players.js is missing!',
+    db_missing_text:     'File players.js not found.',
+    db_missing_hint:     'Make sure both files are in the same folder:',
   },
 };
 

@@ -90,8 +90,18 @@
 - Skriptien testauksessa huomioi aina Git Bash vs Linux bash -erot
 
 ## K018 — JS-erotuksen jälkeinen tiedostorakenne ja latausjärjestys
-- daily.html: players.js (head) → shared.js → daily-game.js (ennen </body>)
-- index.html: players.js (head) → shared.js → config.js → peerjs CDN → grid-game.js (ennen </body>)
+- daily.html: players.js (head) → shared.js → lang.js → daily-game.js (ennen </body>)
+- index.html: players.js (head) → shared.js → lang.js → config.js → peerjs CDN → grid-game.js (ennen </body>)
 - DB-puuttumisen tarkistus kunkin game-tiedoston alussa: `if (typeof DB === 'undefined')` → throw + DOM-virheilmoitus
 - Kategoriadata (TEAMS, NATS, AWARDS, SPECIALS, PLAYABLE_AWARDS) vain shared.js:ssä — ei duplikaatteja
 - test-grid-gen.js kopioi edelleen generointilogiikan — EI importoi daily-game.js:stä (K015 edelleen voimassa)
+
+## K019 — Emoji multi-byte collisions Finnish character grep checks
+- Emoji kuten ❤️, ℹ︎, 🤝 sisältävät tavuja jotka osuvat `[äöÄÖ]` grep-patterniin
+- verify-s05.sh:ssä tarvitaan `grep -v "❤" | grep -v "ℹ" | grep -v "🤝"` poistamaan false positivet
+- Tämä on Git Bash -spesifinen — Linux grep Unicode-modessa ei välttämättä tuota samaa ongelmaa
+
+## K020 — CSS style.display vs offsetParent näkyvyyden tarkistus
+- `element.style.display` palauttaa vain inline-tyylien arvon, ei CSS-luokkien
+- Jos elementti on piilotettu CSS:llä (display:none CSS-säännössä), `style.display` on `""` (tyhjä), EI `"none"`
+- `offsetParent !== null` on luotettavampi näkyvyystarkistus — palauttaa null jos elementti tai vanhempi on piilotettu

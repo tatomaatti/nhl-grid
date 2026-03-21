@@ -56,7 +56,7 @@
   - Verify: `node -c lang.js && node -c daily-game.js` (syntaksi), selaintesti daily.html kahdella kielellä
   - Done when: lang.js ladataan, daily.html näyttää kaikki tekstit oikein FI:nä ja EN:nä, kielenvaihtopainike toimii, kieli tallentuu localStorageen
 
-- [ ] **T03: Lokalisoi index.html + grid-game.js ja luo verifiointiskripti** `est:1h30m`
+- [x] **T03: Lokalisoi index.html + grid-game.js ja luo verifiointiskripti** `est:1h30m`
   - Why: R006 vaatii lokalisaation myös ristinollapeliin. Tämä on suurempi kokonaisuus (~50 JS-merkkijonoa + ~40 HTML-tekstiä). Verifiointiskripti todentaa koko slicen valmiuden.
   - Files: `index.html`, `grid-game.js`, `scripts/verify-s05.sh`
   - Do: 1) Päivitä index.html: lisää `data-i18n`-attribuutit kaikkiin staattisiin teksteihin (settings, lobby, disconnect, game, surrender, win, round-overlay -näkymät), lisää lang.js script-tagi shared.js:n jälkeen, lisää kielenvaihtopainike settings-näkymään. 2) Päivitä grid-game.js: korvaa kaikki kovakoodatut suomenkieliset merkkijonot `t()`-kutsuilla (~50 kohtaa). Kuuntele `langChanged`-eventtiä `refreshUI()`-kutsulla. 3) Luo scripts/verify-s05.sh: tarkista lang.js:n olemassaolo ja sisältö, data-i18n-attribuutit molemmissa HTML:ssä, script-tagit, steal-korjauksen läsnäolo, READY-handshake, ettei kovakoodattuja suomenkielisiä merkkijonoja ole JS-tiedostoissa (pois lukien kommentit).

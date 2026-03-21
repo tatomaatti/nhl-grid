@@ -7,13 +7,14 @@
 // Check that players.js loaded correctly
 if (typeof DB === 'undefined') {
   document.addEventListener('DOMContentLoaded', function() {
+    const _t = typeof t === 'function' ? t : function(k) { return k; };
     document.body.innerHTML = `
       <div style="font-family:sans-serif;max-width:480px;margin:60px auto;padding:24px;background:#1a1a2e;color:#eee;border-radius:12px;text-align:center">
         <div style="font-size:48px">❌</div>
-        <h2 style="color:#ff6b6b">players.js puuttuu!</h2>
-        <p>Tiedostoa <code style="background:#333;padding:2px 6px;border-radius:4px">players.js</code> ei löydy.</p>
-        <p style="color:#aaa;font-size:14px">Varmista että molemmat tiedostot ovat <strong>samassa kansiossa</strong>:</p>
-        <pre style="background:#111;padding:12px;border-radius:8px;text-align:left;font-size:13px">📁 sama kansio/\n  ├── index.html\n  └── players.js   ← tämä puuttuu</pre>
+        <h2 style="color:#ff6b6b">${_t('db_missing_title')}</h2>
+        <p>${_t('db_missing_text')}</p>
+        <p style="color:#aaa;font-size:14px">${_t('db_missing_hint')}</p>
+        <pre style="background:#111;padding:12px;border-radius:8px;text-align:left;font-size:13px">📁 sama kansio/\n  ├── index.html\n  └── players.js</pre>
       </div>`;
   });
   throw new Error('players.js not loaded — DB is undefined');
@@ -24,13 +25,14 @@ function catInfo(key) {
 }
 
 function catHeaderHTML(key, info) {
-  const desc = info.desc;
+  const loc = (typeof catLang === 'function') ? catLang(info) : info;
+  const desc = loc.desc;
   const infoBtn = desc
     ? `<div class="cat-info-btn">ℹ︎<span class="cat-tooltip">${desc}</span></div>`
     : '';
   return `<div class="cat-info-wrap">
     <div class="cat-icon">${info.icon}</div>
-    <div class="cat-abbr">${info.abbr}</div>
+    <div class="cat-abbr">${loc.abbr}</div>
     ${infoBtn}
   </div>`;
 }
@@ -221,7 +223,7 @@ function startGame() {
 function launchRound() {
   const grid = generateGrid();
   if (!grid) {
-    alert('Ei löydy sopivaa ruudukkoa. Kokeile lisätä kategorioita asetuksista.');
+    alert(t('grid_gen_fail'));
     return;
   }
   initGameState(grid);
@@ -259,10 +261,10 @@ function clearGameUI() {
   const inp = document.getElementById('search-input');
   inp.value = '';
   inp.disabled = true;
-  inp.placeholder = 'Valitse ensin ruutu...';
+  inp.placeholder = t('select_cell_first');
   document.getElementById('suggestions').style.display = 'none';
   document.querySelector('.win-trophy').textContent = '🏆';
-  document.querySelector('.win-title').textContent = 'Voittaja';
+  document.querySelector('.win-title').textContent = t('winner');
 }
 
 function updatePlayerLabels() {
@@ -270,15 +272,15 @@ function updatePlayerLabels() {
   const p2 = document.getElementById('p2-label');
   if (CFG.onlineMode) {
     if (NET.myPlayerNum === 1) {
-      p1.textContent = 'Sinä';
-      p2.textContent = 'Vastustaja';
+      p1.textContent = t('you_label');
+      p2.textContent = t('opponent');
     } else {
-      p1.textContent = 'Vastustaja';
-      p2.textContent = 'Sinä';
+      p1.textContent = t('opponent');
+      p2.textContent = t('you_label');
     }
   } else {
-    p1.textContent = 'Pelaaja 1';
-    p2.textContent = 'Pelaaja 2';
+    p1.textContent = t('player_1');
+    p2.textContent = t('player_2');
   }
 }
 
@@ -289,8 +291,8 @@ function updateSeriesBar() {
     return;
   }
   bar.style.display = 'block';
-  const label = CFG.bestOf > 0 ? `Best of ${CFG.bestOf}` : 'Vapaa sarja';
-  bar.textContent = `Erä ${NET.currentRound} | ${label} — ${NET.seriesScores[0]} – ${NET.seriesScores[1]}`;
+  const label = CFG.bestOf > 0 ? `Best of ${CFG.bestOf}` : t('free_series');
+  bar.textContent = t('round_format', NET.currentRound, label, NET.seriesScores[0], NET.seriesScores[1]);
 }
 
 function goMenu() {
@@ -337,7 +339,7 @@ function renderGrid() {
       const idx = r * 3 + c;
       el.innerHTML += `<div class="cell" id="cell-${idx}" onclick="clickCell(${idx})">
         <span class="cell-plus">+</span>
-        <span class="cell-find">FIND PLAYER</span>
+        <span class="cell-find">${t('find_player')}</span>
       </div>`;
     }
   }
@@ -356,10 +358,10 @@ function refreshCells() {
       el.innerHTML = `<div class="cell-owner-dot" style="background:${cell.owner===1?'#4fc3f7':'#ff6b6b'}"></div>
         <div class="cell-player">${cell.player}</div>`;
       if (CFG.stealEnabled && cell.owner !== G.turn && G.stealsLeft[G.turn] > 0 && isMyTurn()) {
-        el.innerHTML += `<div class="steal-tag">⚡STEAL</div>`;
+        el.innerHTML += `<div class="steal-tag">${t('steal_tag')}</div>`;
       }
     } else {
-      el.innerHTML = `<span class="cell-plus">+</span><span class="cell-find">FIND PLAYER</span>`;
+      el.innerHTML = `<span class="cell-plus">+</span><span class="cell-find">${t('find_player')}</span>`;
     }
 
     if (i === G.selected) el.classList.add('selected');
@@ -387,14 +389,14 @@ function refreshUI() {
   const tn = document.getElementById('turn-name');
   if (CFG.onlineMode) {
     if (isMyTurn()) {
-      tn.textContent = 'Sinun vuorosi!';
+      tn.textContent = t('your_turn');
       tn.style.color = '#4fc3f7';
     } else {
-      tn.textContent = 'Vastustajan vuoro...';
+      tn.textContent = t('opponent_turn');
       tn.style.color = '#ff6b6b';
     }
   } else {
-    tn.textContent = 'Pelaaja ' + cp;
+    tn.textContent = t('player_turn', cp);
     tn.style.color = cp === 1 ? '#4fc3f7' : '#ff6b6b';
   }
 
@@ -407,7 +409,7 @@ function refreshUI() {
   if (CFG.onlineMode && !isMyTurn()) {
     const inp = document.getElementById('search-input');
     inp.disabled = true;
-    inp.placeholder = 'Vastustajan vuoro...';
+    inp.placeholder = t('opponent_turn');
   }
 
   refreshCells();
@@ -434,7 +436,7 @@ function clickCell(idx) {
   if (cell.owner && cell.owner !== G.turn) {
     if (!CFG.stealEnabled || G.stealsLeft[G.turn] <= 0) return;
     G.stealMode = true;
-    setStatus(`⚡ Varastetaan pelaaja ${cell.owner === 1 ? '1' : '2'}:n ruutu! Löydä eri pelaaja.`, '');
+    setStatus(t('steal_status', cell.owner === 1 ? '1' : '2'), '');
   } else {
     G.stealMode = false;
     setStatus('', '');
@@ -450,7 +452,7 @@ function clickCell(idx) {
 
   const inp = document.getElementById('search-input');
   inp.disabled = false;
-  inp.placeholder = 'Hae NHL-pelaajaa...';
+  inp.placeholder = t('search_placeholder');
   inp.value = '';
   inp.focus();
   document.getElementById('suggestions').style.display = 'none';
@@ -472,7 +474,7 @@ document.getElementById('search-input').addEventListener('input', function () {
     const isUsed = !CFG.allowReuse && G.usedPlayers.has(p.n);
     const esc    = p.n.replace(/'/g, "\\'");
     return `<div class="sug-item${i === 0 ? ' highlighted' : ''}" data-name="${p.n}" onclick="submitPlayer('${esc}')">
-      <span>${p.n}${isUsed ? ' <span class="sug-used">(käytetty)</span>' : ''}</span>
+      <span>${p.n}${isUsed ? ' <span class="sug-used">' + t('used_label') + '</span>' : ''}</span>
     </div>`;
   }).join('');
   sugHighlightIdx = 0;
@@ -536,7 +538,7 @@ function submitPlayer(name) {
     // Disable input while waiting for host response
     const inp = document.getElementById('search-input');
     inp.disabled = true;
-    inp.placeholder = 'Odotetaan...';
+    inp.placeholder = t('waiting_label');
     return;
   }
 
@@ -550,23 +552,25 @@ function validateAndApplyMove(idx, name, turn) {
 
   const player = DB.find(p => p.n.toLowerCase() === name.toLowerCase());
   if (!player) {
-    handleWrongGuess(`Pelaajaa "${name}" ei löydy tietokannasta.`, turn);
+    handleWrongGuess(t('player_not_found', name), turn);
     return;
   }
 
   if (!CFG.allowReuse && G.usedPlayers.has(player.n)) {
-    handleWrongGuess(`${player.n} on jo käytetty!`, turn);
+    handleWrongGuess(t('player_already_used', player.n), turn);
     return;
   }
 
   if (!playerMatchesCat(player, rowKey) || !playerMatchesCat(player, colKey)) {
     const ri = catInfo(rowKey), ci = catInfo(colKey);
-    handleWrongGuess(`Väärin! ${player.n} ei sovi: ${ri.abbr} × ${ci.abbr}.`, turn);
+    const rLoc = (typeof catLang === 'function') ? catLang(ri) : ri;
+    const cLoc = (typeof catLang === 'function') ? catLang(ci) : ci;
+    handleWrongGuess(t('wrong_guess', player.n, rLoc.abbr, cLoc.abbr), turn);
     return;
   }
 
   if (G.stealMode && G.cells[idx].player === player.n) {
-    handleWrongGuess('Varastukseen tarvitaan eri pelaaja!', turn);
+    handleWrongGuess(t('steal_need_different'), turn);
     return;
   }
 
@@ -626,7 +630,7 @@ function handleWrongGuess(msg, turn) {
 function endTurn() {
   const inp = document.getElementById('search-input');
   inp.disabled = true;
-  inp.placeholder = 'Valitse ensin ruutu...';
+  inp.placeholder = t('select_cell_first');
   inp.value = '';
   G.selected = null;
   G.stealMode = false;
@@ -646,14 +650,14 @@ function startTimer() {
       if (CFG.onlineMode) {
         if (NET.isHost) {
           // Host is authoritative for timer
-          setStatus('Aika loppui! Vuoro siirtyi.', 'wrong');
+          setStatus(t('time_up'), 'wrong');
           const nextTurn = G.turn === 1 ? 2 : 1;
           sendMsg({ type: 'TURN_CHANGE', turn: nextTurn, reason: 'timeout' });
           endTurn();
         }
         // Guest: host will send TURN_CHANGE, don't do anything
       } else {
-        setStatus('Aika loppui! Vuoro siirtyi.', 'wrong');
+        setStatus(t('time_up'), 'wrong');
         endTurn();
       }
     }
@@ -747,30 +751,30 @@ function showRoundOverlay(winner) {
   if (winner > 0) {
     icon.textContent = '🏆';
     if (CFG.onlineMode) {
-      text.textContent = winner === NET.myPlayerNum ? 'Voitit erän!' : 'Vastustaja voitti erän';
+      text.textContent = winner === NET.myPlayerNum ? t('you_won_round') : t('you_lost_round');
       text.style.color = winner === NET.myPlayerNum ? '#66bb6a' : '#ff6b6b';
     } else {
-      text.textContent = `Pelaaja ${winner} voitti erän!`;
+      text.textContent = t('player_won_round', winner);
       text.style.color = winner === 1 ? '#4fc3f7' : '#ff6b6b';
     }
   } else {
     icon.textContent = '🤝';
-    text.textContent = 'Tasapeli!';
+    text.textContent = t('draw');
     text.style.color = '#ffd700';
   }
 
   const nextStarter = ((NET.currentRound + 1) % 2 === 1) ? 1 : 2;
   const starterLabel = CFG.onlineMode
-    ? (nextStarter === NET.myPlayerNum ? 'Sinä aloitat' : 'Vastustaja aloittaa')
-    : `Pelaaja ${nextStarter} aloittaa`;
-  series.textContent = `Sarja: ${NET.seriesScores[0]} – ${NET.seriesScores[1]}  ·  ${starterLabel} seuraavan erän`;
+    ? (nextStarter === NET.myPlayerNum ? t('you_start') : t('opponent_starts'))
+    : t('player_starts', nextStarter);
+  series.textContent = t('series_format', NET.seriesScores[0], NET.seriesScores[1], starterLabel);
 
   // Only host (or local player) can advance to next round
   if (CFG.onlineMode && !NET.isHost) {
-    nextBtn.textContent = 'Odotetaan hostia...';
+    nextBtn.textContent = t('waiting_host');
     nextBtn.disabled = true;
   } else {
-    nextBtn.textContent = 'Seuraava erä';
+    nextBtn.textContent = t('next_round');
     nextBtn.disabled = false;
   }
 
@@ -785,22 +789,22 @@ function showSeriesEnd(winner) {
 
   if (CFG.onlineMode) {
     if (winner === NET.myPlayerNum) {
-      document.querySelector('.win-title').textContent = 'Voitit sarjan!';
+      document.querySelector('.win-title').textContent = t('you_won_series');
       wp.textContent = `${NET.seriesScores[0]} – ${NET.seriesScores[1]}`;
       wp.style.color = '#66bb6a';
     } else {
-      document.querySelector('.win-title').textContent = 'Hävisit sarjan';
+      document.querySelector('.win-title').textContent = t('you_lost_series');
       wp.textContent = `${NET.seriesScores[0]} – ${NET.seriesScores[1]}`;
       wp.style.color = '#ff6b6b';
     }
   } else {
-    document.querySelector('.win-title').textContent = `Best of ${CFG.bestOf} — Voittaja`;
-    wp.textContent = `Pelaaja ${winner}`;
+    document.querySelector('.win-title').textContent = t('bestof_winner', CFG.bestOf);
+    wp.textContent = t('player_label', winner);
     wp.style.color = winner === 1 ? '#4fc3f7' : '#ff6b6b';
   }
 
   // Change button to "Uusi sarja"
-  document.getElementById('btn-next-round').textContent = 'Uusi sarja';
+  document.getElementById('btn-next-round').textContent = t('new_series');
   document.getElementById('btn-next-round').onclick = function() {
     NET.seriesScores = [0, 0];
     NET.currentRound = 1;
@@ -866,7 +870,7 @@ function generateAndShowHint(idx, forPlayer) {
   }
 
   if (valid.length === 0) {
-    const hints = 'Ei sopivia pelaajia jäljellä!';
+    const hints = t('hint_no_players');
     if (CFG.onlineMode && NET.isHost && forPlayer !== NET.myPlayerNum) {
       sendMsg({ type: 'HINT_RESULT', hints });
     } else {
@@ -908,10 +912,10 @@ function updateHintBar() {
   const rem = document.getElementById('hint-remaining');
 
   if (CFG.hintsPerPlayer === 0) {
-    rem.textContent = '(rajaton)';
+    rem.textContent = t('hint_unlimited');
     btn.disabled = false;
   } else {
-    rem.textContent = `(${left} jäljellä)`;
+    rem.textContent = t('hint_remaining', left);
     btn.disabled = left <= 0;
   }
 }
@@ -934,10 +938,10 @@ function createOnlineGame() {
   NET.roomCode = generateRoomCode();
 
   showScreen('lobby-screen');
-  document.getElementById('lobby-title').textContent = 'Odotetaan vastustajaa...';
+  document.getElementById('lobby-title').textContent = t('waiting_opponent');
   document.getElementById('room-code-display').textContent = NET.roomCode;
   document.getElementById('copy-btn').style.display = 'inline-block';
-  document.getElementById('lobby-status').textContent = 'Jaa koodi tai linkki kaverille';
+  document.getElementById('lobby-status').textContent = t('share_code');
   document.getElementById('lobby-spinner').style.display = 'block';
   document.getElementById('lobby-join-section').style.display = 'none';
 
@@ -950,7 +954,7 @@ function createOnlineGame() {
 
   NET.peer.on('connection', function(conn) {
     NET.conn = conn;
-    document.getElementById('lobby-status').textContent = 'Vastustaja yhdistyi!';
+    document.getElementById('lobby-status').textContent = t('opponent_connected');
     document.getElementById('lobby-spinner').style.display = 'none';
 
     let connOpened = false;
@@ -961,7 +965,7 @@ function createOnlineGame() {
       if (connOpened) return; // prevent double-fire
       connOpened = true;
       console.log('[PeerJS] Host: data channel open, waiting for guest READY');
-      document.getElementById('lobby-status').textContent = 'Yhteys muodostettu! Odotetaan vastustajaa...';
+      document.getElementById('lobby-status').textContent = t('connected_waiting');
 
       // 15s timeout as fallback if READY never arrives
       readyTimeout = setTimeout(() => {
@@ -986,7 +990,7 @@ function createOnlineGame() {
       if (!connOpened) {
         console.error('[PeerJS] Host: data channel did not open in 15s');
         document.getElementById('lobby-status').textContent =
-          'Yhteys epäonnistui (NAT/palomuuri). Kokeile toista verkkoa tai mobiilihotspotia.';
+          t('connection_failed_nat');
         document.getElementById('lobby-spinner').style.display = 'none';
       }
     }, 15000);
@@ -997,7 +1001,7 @@ function createOnlineGame() {
         guestReady = true;
         if (readyTimeout) clearTimeout(readyTimeout);
         console.log('[PeerJS] Host: guest READY received, starting round');
-        document.getElementById('lobby-status').textContent = 'Vastustaja valmis! Peli alkaa...';
+        document.getElementById('lobby-status').textContent = t('connected_ready');
         startOnlineRound();
         return;
       }
@@ -1010,7 +1014,7 @@ function createOnlineGame() {
 
     conn.on('error', function(err) {
       console.error('Host connection error:', err);
-      document.getElementById('lobby-status').textContent = 'Yhteysvirhe: ' + err.type;
+      document.getElementById('lobby-status').textContent = t('connection_error', err.type);
     });
   });
 
@@ -1035,10 +1039,10 @@ function joinOnlineGame(code) {
   NET.currentRound = 1;
 
   showScreen('lobby-screen');
-  document.getElementById('lobby-title').textContent = 'Yhdistetään...';
+  document.getElementById('lobby-title').textContent = t('connecting');
   document.getElementById('room-code-display').textContent = '';
   document.getElementById('copy-btn').style.display = 'none';
-  document.getElementById('lobby-status').textContent = `Huone: ${NET.roomCode}`;
+  document.getElementById('lobby-status').textContent = t('room_label', NET.roomCode);
   document.getElementById('lobby-spinner').style.display = 'block';
   document.getElementById('lobby-join-section').style.display = 'none';
 
@@ -1053,7 +1057,7 @@ function joinOnlineGame(code) {
       if (guestConnOpened) return;
       guestConnOpened = true;
       console.log('[PeerJS] Guest: data channel open, sending READY');
-      document.getElementById('lobby-status').textContent = 'Yhdistetty! Odotetaan pelin alkua...';
+      document.getElementById('lobby-status').textContent = t('connected_guest');
       document.getElementById('lobby-spinner').style.display = 'none';
       // Signal host that guest is ready to receive data
       sendMsg({ type: 'READY' });
@@ -1072,7 +1076,7 @@ function joinOnlineGame(code) {
       if (!guestConnOpened) {
         console.error('[PeerJS] Guest: data channel did not open in 15s');
         document.getElementById('lobby-status').textContent =
-          'Yhteys epäonnistui (NAT/palomuuri). Kokeile toista verkkoa tai mobiilihotspotia.';
+          t('connection_failed_nat');
         document.getElementById('lobby-spinner').style.display = 'none';
       }
     }, 15000);
@@ -1087,13 +1091,13 @@ function joinOnlineGame(code) {
 
     NET.conn.on('error', function(err) {
       console.error('Guest connection error:', err);
-      document.getElementById('lobby-status').textContent = 'Yhteysvirhe: ' + err.type;
+      document.getElementById('lobby-status').textContent = t('connection_error', err.type);
     });
   });
 
   NET.peer.on('error', function(err) {
     console.error('Peer error:', err);
-    document.getElementById('lobby-status').textContent = 'Yhteys epäonnistui. Tarkista koodi.';
+    document.getElementById('lobby-status').textContent = t('connection_failed_check');
     document.getElementById('lobby-spinner').style.display = 'none';
   });
 }
@@ -1110,13 +1114,13 @@ function sendMsg(data) {
 function copyRoomCode() {
   const url = window.location.origin + window.location.pathname + '?room=' + NET.roomCode;
   navigator.clipboard.writeText(url).then(() => {
-    document.getElementById('copy-btn').textContent = '✓ Kopioitu!';
-    setTimeout(() => { document.getElementById('copy-btn').textContent = '📋 Kopioi linkki'; }, 2000);
+    document.getElementById('copy-btn').textContent = t('code_copied');
+    setTimeout(() => { document.getElementById('copy-btn').textContent = t('copy_link'); }, 2000);
   }).catch(() => {
     // Fallback: copy just the code
     navigator.clipboard.writeText(NET.roomCode);
-    document.getElementById('copy-btn').textContent = '✓ Koodi kopioitu!';
-    setTimeout(() => { document.getElementById('copy-btn').textContent = '📋 Kopioi linkki'; }, 2000);
+    document.getElementById('copy-btn').textContent = t('code_only_copied');
+    setTimeout(() => { document.getElementById('copy-btn').textContent = t('copy_link'); }, 2000);
   });
 }
 
@@ -1218,7 +1222,7 @@ function handleHostMessage(data) {
       if (data.owner === NET.myPlayerNum) {
         setStatus(`✓ ${data.playerName}`, 'correct');
       } else {
-        setStatus(`Vastustaja pelasi: ${data.playerName}`, '');
+        setStatus(t('opponent_played', data.playerName), '');
       }
       G.selected = null;
       G.stealMode = false;
@@ -1243,7 +1247,7 @@ function handleHostMessage(data) {
       const inp = document.getElementById('search-input');
       inp.disabled = true;
       inp.value = '';
-      inp.placeholder = isMyTurn() ? 'Valitse ensin ruutu...' : 'Vastustajan vuoro...';
+      inp.placeholder = isMyTurn() ? t('select_cell_first') : t('opponent_turn');
 
       refreshUI();
       resetTimer();
@@ -1256,13 +1260,13 @@ function handleHostMessage(data) {
       G.stealMode = false;
       document.getElementById('hint-display').textContent = '';
       if (data.reason === 'timeout' && data.turn === NET.myPlayerNum) {
-        setStatus('Vastustajan aika loppui! Sinun vuorosi.', '');
+        setStatus(t('opponent_time_up'), '');
       } else if (data.reason === 'timeout') {
-        setStatus('Aika loppui! Vuoro siirtyi.', 'wrong');
+        setStatus(t('time_up'), 'wrong');
       } else if (data.turn === NET.myPlayerNum) {
-        setStatus('Vastustaja arvasi väärin. Sinun vuorosi!', '');
+        setStatus(t('opponent_wrong'), '');
       } else {
-        setStatus('Väärin. Vastustajan vuoro.', 'wrong');
+        setStatus(t('wrong_opp_turn'), 'wrong');
       }
       refreshUI();
       resetTimer();
@@ -1316,10 +1320,10 @@ function handleHostMessage(data) {
     case 'SURRENDER': {
       stopTimer();
       document.querySelector('.win-trophy').textContent = '🏳️';
-      document.querySelector('.win-title').textContent = 'Vastustaja luovutti!';
+      document.querySelector('.win-title').textContent = t('opponent_surrendered');
       showScreen('win-screen');
       const wp = document.getElementById('win-player');
-      wp.textContent = 'Voitit!';
+      wp.textContent = t('you_won');
       wp.style.color = '#66bb6a';
       document.getElementById('btn-next-round').style.display = 'none';
       break;
@@ -1350,10 +1354,10 @@ function handleGuestMessage(data) {
     case 'SURRENDER': {
       stopTimer();
       document.querySelector('.win-trophy').textContent = '🏳️';
-      document.querySelector('.win-title').textContent = 'Vastustaja luovutti!';
+      document.querySelector('.win-title').textContent = t('opponent_surrendered');
       showScreen('win-screen');
       const wp = document.getElementById('win-player');
-      wp.textContent = 'Voitit!';
+      wp.textContent = t('you_won');
       wp.style.color = '#66bb6a';
       document.getElementById('btn-next-round').style.display = 'none';
       break;
@@ -1372,6 +1376,22 @@ document.addEventListener('DOMContentLoaded', function() {
   const roomCode = params.get('room');
   if (roomCode && roomCode.length === 5) {
     joinOnlineGame(roomCode);
+  }
+});
+
+// =====================================================================
+// LANGUAGE CHANGE — re-render UI when language switches
+// =====================================================================
+document.addEventListener('langChanged', function() {
+  // Re-render grid headers with localized category names
+  if (G.grid) {
+    renderGrid();
+    refreshCells();
+  }
+  // Update player labels and turn text when game is active
+  if (G.cells && document.getElementById('game-screen').offsetParent !== null) {
+    updatePlayerLabels();
+    refreshUI();
   }
 });
 
