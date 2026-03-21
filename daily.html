@@ -643,66 +643,66 @@ button, input, [onclick], .guess-item, .col-header, .row-header, .player-cell.hi
 // CATEGORY DEFINITIONS
 // =====================================================================
 const TEAMS = {
-  EDM:{name:"Edmonton Oilers",     icon:"🟠",group:"Joukkue"},
-  TOR:{name:"Toronto Maple Leafs", icon:"🍁",group:"Joukkue"},
-  BOS:{name:"Boston Bruins",       icon:"🐻",group:"Joukkue"},
-  PIT:{name:"Pittsburgh Penguins", icon:"🐧",group:"Joukkue"},
-  TBL:{name:"Tampa Bay Lightning", icon:"⚡",group:"Joukkue"},
-  COL:{name:"Colorado Avalanche",  icon:"🏔️",group:"Joukkue"},
-  WSH:{name:"Washington Capitals", icon:"🦅",group:"Joukkue"},
-  CHI:{name:"Chicago Blackhawks",  icon:"🪶",group:"Joukkue"},
-  DET:{name:"Detroit Red Wings",   icon:"🔴",group:"Joukkue"},
-  VAN:{name:"Vancouver Canucks",   icon:"🌊",group:"Joukkue"},
-  MTL:{name:"Montréal Canadiens",  icon:"🔵",group:"Joukkue"},
-  NYR:{name:"New York Rangers",    icon:"🗽",group:"Joukkue"},
-  WPG:{name:"Winnipeg Jets",       icon:"✈️",group:"Joukkue"},
-  FLA:{name:"Florida Panthers",    icon:"🐆",group:"Joukkue"},
-  CAR:{name:"Carolina Hurricanes", icon:"🌀",group:"Joukkue"},
-  NSH:{name:"Nashville Predators", icon:"🎸",group:"Joukkue"},
-  STL:{name:"St. Louis Blues",     icon:"🎵",group:"Joukkue"},
-  VGK:{name:"Vegas Golden Knights",icon:"⚔️",group:"Joukkue"},
-  MIN:{name:"Minnesota Wild",      icon:"🌲",group:"Joukkue"},
-  NJD:{name:"New Jersey Devils",   icon:"😈",group:"Joukkue"},
-  NYI:{name:"New York Islanders",  icon:"🏝️",group:"Joukkue"},
-  PHI:{name:"Philadelphia Flyers", icon:"🟠",group:"Joukkue"},
-  CGY:{name:"Calgary Flames",      icon:"🔥",group:"Joukkue"},
-  OTT:{name:"Ottawa Senators",     icon:"🏛️",group:"Joukkue"},
-  BUF:{name:"Buffalo Sabres",      icon:"🦬",group:"Joukkue"},
-  ARI:{name:"Arizona Coyotes",     icon:"🐺",group:"Joukkue"},
-  UTA:{name:"Utah Hockey Club",    icon:"🏔",group:"Joukkue"},
-  LAK:{name:"Los Angeles Kings",   icon:"👑",group:"Joukkue"},
-  SJS:{name:"San Jose Sharks",     icon:"🦈",group:"Joukkue"},
-  ANA:{name:"Anaheim Ducks",       icon:"🦆",group:"Joukkue"},
-  SEA:{name:"Seattle Kraken",      icon:"🐙",group:"Joukkue"},
-  CBJ:{name:"Columbus Blue Jackets",icon:"💙",group:"Joukkue"},
-  DAL:{name:"Dallas Stars",        icon:"⭐",group:"Joukkue"},
+  EDM:{name:"Edmonton Oilers",     icon:"🟠",group:"Joukkue",abbr:"EDM"},
+  TOR:{name:"Toronto Maple Leafs", icon:"🍁",group:"Joukkue",abbr:"TOR"},
+  BOS:{name:"Boston Bruins",       icon:"🐻",group:"Joukkue",abbr:"BOS"},
+  PIT:{name:"Pittsburgh Penguins", icon:"🐧",group:"Joukkue",abbr:"PIT"},
+  TBL:{name:"Tampa Bay Lightning", icon:"⚡",group:"Joukkue",abbr:"TBL"},
+  COL:{name:"Colorado Avalanche",  icon:"🏔️",group:"Joukkue",abbr:"COL"},
+  WSH:{name:"Washington Capitals", icon:"🦅",group:"Joukkue",abbr:"WSH"},
+  CHI:{name:"Chicago Blackhawks",  icon:"🪶",group:"Joukkue",abbr:"CHI"},
+  DET:{name:"Detroit Red Wings",   icon:"🔴",group:"Joukkue",abbr:"DET"},
+  VAN:{name:"Vancouver Canucks",   icon:"🌊",group:"Joukkue",abbr:"VAN"},
+  MTL:{name:"Montréal Canadiens",  icon:"🔵",group:"Joukkue",abbr:"MTL"},
+  NYR:{name:"New York Rangers",    icon:"🗽",group:"Joukkue",abbr:"NYR"},
+  WPG:{name:"Winnipeg Jets",       icon:"✈️",group:"Joukkue",abbr:"WPG"},
+  FLA:{name:"Florida Panthers",    icon:"🐆",group:"Joukkue",abbr:"FLA"},
+  CAR:{name:"Carolina Hurricanes", icon:"🌀",group:"Joukkue",abbr:"CAR"},
+  NSH:{name:"Nashville Predators", icon:"🎸",group:"Joukkue",abbr:"NSH"},
+  STL:{name:"St. Louis Blues",     icon:"🎵",group:"Joukkue",abbr:"STL"},
+  VGK:{name:"Vegas Golden Knights",icon:"⚔️",group:"Joukkue",abbr:"VGK"},
+  MIN:{name:"Minnesota Wild",      icon:"🌲",group:"Joukkue",abbr:"MIN"},
+  NJD:{name:"New Jersey Devils",   icon:"😈",group:"Joukkue",abbr:"NJD"},
+  NYI:{name:"New York Islanders",  icon:"🏝️",group:"Joukkue",abbr:"NYI"},
+  PHI:{name:"Philadelphia Flyers", icon:"🟠",group:"Joukkue",abbr:"PHI"},
+  CGY:{name:"Calgary Flames",      icon:"🔥",group:"Joukkue",abbr:"CGY"},
+  OTT:{name:"Ottawa Senators",     icon:"🏛️",group:"Joukkue",abbr:"OTT"},
+  BUF:{name:"Buffalo Sabres",      icon:"🦬",group:"Joukkue",abbr:"BUF"},
+  ARI:{name:"Arizona Coyotes",     icon:"🐺",group:"Joukkue",abbr:"ARI"},
+  UTA:{name:"Utah Hockey Club",    icon:"🏔",group:"Joukkue",abbr:"UTA"},
+  LAK:{name:"Los Angeles Kings",   icon:"👑",group:"Joukkue",abbr:"LAK"},
+  SJS:{name:"San Jose Sharks",     icon:"🦈",group:"Joukkue",abbr:"SJS"},
+  ANA:{name:"Anaheim Ducks",       icon:"🦆",group:"Joukkue",abbr:"ANA"},
+  SEA:{name:"Seattle Kraken",      icon:"🐙",group:"Joukkue",abbr:"SEA"},
+  CBJ:{name:"Columbus Blue Jackets",icon:"💙",group:"Joukkue",abbr:"CBJ"},
+  DAL:{name:"Dallas Stars",        icon:"⭐",group:"Joukkue",abbr:"DAL"},
 };
 
 const NATS = {
-  CAN:{name:"Kanada",       icon:"🇨🇦",group:"Kansallisuus"},
-  USA:{name:"USA",          icon:"🇺🇸",group:"Kansallisuus"},
-  SWE:{name:"Ruotsi",       icon:"🇸🇪",group:"Kansallisuus"},
-  FIN:{name:"Suomi",        icon:"🇫🇮",group:"Kansallisuus"},
-  RUS:{name:"Venäjä",       icon:"🇷🇺",group:"Kansallisuus"},
-  CZE:{name:"Tsekki",       icon:"🇨🇿",group:"Kansallisuus"},
-  SVK:{name:"Slovakia",     icon:"🇸🇰",group:"Kansallisuus"},
-  GER:{name:"Saksa",        icon:"🇩🇪",group:"Kansallisuus"},
-  SUI:{name:"Sveitsi",      icon:"🇨🇭",group:"Kansallisuus"},
-  AUT:{name:"Itävalta",     icon:"🇦🇹",group:"Kansallisuus"},
-  LVA:{name:"Latvia",       icon:"🇱🇻",group:"Kansallisuus"},
+  CAN:{name:"Kanada",       icon:"🇨🇦",group:"Kansallisuus",abbr:"Kanada"},
+  USA:{name:"USA",          icon:"🇺🇸",group:"Kansallisuus",abbr:"USA"},
+  SWE:{name:"Ruotsi",       icon:"🇸🇪",group:"Kansallisuus",abbr:"Ruotsi"},
+  FIN:{name:"Suomi",        icon:"🇫🇮",group:"Kansallisuus",abbr:"Suomi"},
+  RUS:{name:"Venäjä",       icon:"🇷🇺",group:"Kansallisuus",abbr:"Venäjä"},
+  CZE:{name:"Tsekki",       icon:"🇨🇿",group:"Kansallisuus",abbr:"Tsekki"},
+  SVK:{name:"Slovakia",     icon:"🇸🇰",group:"Kansallisuus",abbr:"Slovakia"},
+  GER:{name:"Saksa",        icon:"🇩🇪",group:"Kansallisuus",abbr:"Saksa"},
+  SUI:{name:"Sveitsi",      icon:"🇨🇭",group:"Kansallisuus",abbr:"Sveitsi"},
+  AUT:{name:"Itävalta",     icon:"🇦🇹",group:"Kansallisuus",abbr:"Itävalta"},
+  LVA:{name:"Latvia",       icon:"🇱🇻",group:"Kansallisuus",abbr:"Latvia"},
 };
 
 const AWARDS = {
-  Hart:         {name:"Hart Trophy",           icon:"🥇",group:"Palkinto"},
-  Vezina:       {name:"Vezina Trophy",         icon:"🧤",group:"Palkinto"},
-  Norris:       {name:"Norris Trophy",         icon:"🛡️",group:"Palkinto"},
-  StanleyCup:   {name:"Stanley Cup",           icon:"🏆",group:"Palkinto"},
-  Calder:       {name:"Calder Trophy",         icon:"⭐",group:"Palkinto"},
-  RocketRichard:{name:"Rocket Richard Trophy", icon:"🚀",group:"Palkinto"},
-  ConnSmythe:   {name:"Conn Smythe Trophy",    icon:"🎖️",group:"Palkinto"},
-  ArtRoss:      {name:"Art Ross Trophy",       icon:"🎯",group:"Palkinto"},
-  TedLindsay:   {name:"Ted Lindsay Award",     icon:"💪",group:"Palkinto"},
-  Selke:        {name:"Selke Trophy",          icon:"🔒",group:"Palkinto"},
+  Hart:         {name:"Hart Trophy",           icon:"🥇",group:"Palkinto",abbr:"Hart Trophy"},
+  Vezina:       {name:"Vezina Trophy",         icon:"🧤",group:"Palkinto",abbr:"Vezina Trophy"},
+  Norris:       {name:"Norris Trophy",         icon:"🛡️",group:"Palkinto",abbr:"Norris Trophy"},
+  StanleyCup:   {name:"Stanley Cup",           icon:"🏆",group:"Palkinto",abbr:"Stanley Cup"},
+  Calder:       {name:"Calder Trophy",         icon:"⭐",group:"Palkinto",abbr:"Calder Trophy"},
+  RocketRichard:{name:"Rocket Richard Trophy", icon:"🚀",group:"Palkinto",abbr:"Rocket Richard"},
+  ConnSmythe:   {name:"Conn Smythe Trophy",    icon:"🎖️",group:"Palkinto",abbr:"Conn Smythe"},
+  ArtRoss:      {name:"Art Ross Trophy",       icon:"🎯",group:"Palkinto",abbr:"Art Ross Trophy"},
+  TedLindsay:   {name:"Ted Lindsay Award",     icon:"💪",group:"Palkinto",abbr:"Ted Lindsay"},
+  Selke:        {name:"Selke Trophy",          icon:"🔒",group:"Palkinto",abbr:"Selke Trophy"},
 };
 
 // Special derived categories
@@ -714,6 +714,11 @@ const SPECIALS = {
   five_teams: {name:"Pelannut vähintään 5 joukkueessa", icon:"🎒", group:"Erityinen",
                match: p => p.t && p.t.length >= 5},
 };
+
+// =====================================================================
+// PLAYABLE AWARDS — only these appear as hint badges (matches AWARDS keys)
+// =====================================================================
+const PLAYABLE_AWARDS = new Set(Object.keys(AWARDS));
 
 // =====================================================================
 // BUILD ELIGIBLE CATEGORY POOL
@@ -728,6 +733,7 @@ function buildCategoryPool() {
       pool.push({
         id: 'team_' + key, key, type: 'team',
         name: info.name, icon: info.icon, group: info.group,
+        abbr: info.abbr || info.name,
         players,
         match: p => p.t && p.t.includes(key),
       });
@@ -741,6 +747,7 @@ function buildCategoryPool() {
       pool.push({
         id: 'nat_' + key, key, type: 'nat',
         name: info.name, icon: info.icon, group: info.group,
+        abbr: info.abbr || info.name,
         players,
         match: p => p.c === key,
       });
@@ -754,6 +761,7 @@ function buildCategoryPool() {
       pool.push({
         id: 'award_' + key, key, type: 'award',
         name: info.name, icon: info.icon, group: info.group,
+        abbr: info.abbr || info.name,
         players,
         match: p => p.a && p.a.includes(key),
       });
@@ -767,6 +775,7 @@ function buildCategoryPool() {
       pool.push({
         id: 'special_' + key, key, type: 'special',
         name: info.name, icon: info.icon, group: info.group,
+        abbr: info.name,
         players,
         match: info.match,
       });
@@ -1247,8 +1256,11 @@ function formatPlayerHint(p) {
     parts.push('<span class="hint-nat">🌍 ' + natName + '</span>');
   }
   if (p.a && p.a.length > 0) {
-    const awardNames = p.a.map(k => AWARDS[k] ? AWARDS[k].name : k);
-    parts.push('<span class="hint-awards">🏆 ' + awardNames.join(', ') + '</span>');
+    const playable = p.a.filter(k => PLAYABLE_AWARDS.has(k));
+    if (playable.length > 0) {
+      const awardNames = playable.map(k => AWARDS[k] ? AWARDS[k].name : k);
+      parts.push('<span class="hint-awards">🏆 ' + awardNames.join(', ') + '</span>');
+    }
   }
   return parts.join('<br>');
 }
@@ -1272,7 +1284,7 @@ function renderGrid() {
     if (G.solved[3+c]) {
       const cat = G.colCats[c];
       el.innerHTML = `<div class="header-icon">${cat.icon}</div>
-                      <div class="header-name">${cat.name}</div>`;
+                      <div class="header-name">${cat.abbr}</div>`;
     } else {
       el.innerHTML = `<div class="header-question">?</div>
                       <div class="header-hint">Sarake ${c+1}</div>`;
@@ -1292,7 +1304,7 @@ function renderGrid() {
     if (G.solved[r]) {
       const cat = G.rowCats[r];
       rh.innerHTML = `<div class="header-icon">${cat.icon}</div>
-                      <div class="header-name">${cat.name}</div>`;
+                      <div class="header-name">${cat.abbr}</div>`;
     } else {
       rh.innerHTML = `<div class="header-question">?</div>
                       <div class="header-hint">Rivi ${r+1}</div>`;
@@ -1415,6 +1427,7 @@ function renderGuessList(query) {
     .filter(cat => {
       if (query.length > 0) {
         return cat.name.toLowerCase().includes(query) ||
+               cat.abbr.toLowerCase().includes(query) ||
                cat.group.toLowerCase().includes(query);
       }
       return true;
@@ -1441,7 +1454,7 @@ function renderGuessList(query) {
     const isBlocked = isGloballyUsed || isWrongHere;
     el.className = 'guess-item' + (isBlocked ? ' used' : '');
     el.innerHTML = `<span class="gi-icon">${cat.icon}</span>
-                    <span>${cat.name}</span>
+                    <span>${cat.abbr}</span>
                     <span class="gi-group">${isGloballyUsed ? '✓ Käytetty' : isWrongHere ? '✗ Kokeiltu' : cat.group}</span>`;
     if (!isBlocked) {
       el.addEventListener('click', () => makeGuess(cat));
@@ -1488,7 +1501,7 @@ function makeGuess(cat) {
     if (type === 'row') G.rowCats[idx] = cat;
     else G.colCats[idx] = cat;
 
-    showStatus(`✓ ${cat.icon} ${cat.name}`, 'correct');
+    showStatus(`✓ ${cat.icon} ${cat.abbr}`, 'correct');
 
     // Flash header green
     const headerSel = `.${type === 'row' ? 'row' : 'col'}-header[data-idx="${idx}"]`;
@@ -1521,7 +1534,7 @@ function makeGuess(cat) {
     if (!G.wrongGuesses[lineKey]) G.wrongGuesses[lineKey] = new Set();
     G.wrongGuesses[lineKey].add(cat.id);
 
-    showStatus(`✗ ${cat.icon} ${cat.name} — ei sovi kaikkiin kolmeen`, 'wrong');
+    showStatus(`✗ ${cat.icon} ${cat.abbr} — ei sovi kaikkiin kolmeen`, 'wrong');
 
     // Flash header red
     const headerSel = `.${type === 'row' ? 'row' : 'col'}-header[data-idx="${idx}"]`;
@@ -1612,7 +1625,7 @@ function buildSolutionGrid(containerId) {
     const el = document.createElement('div');
     el.className = 'sol-col-header';
     const cat = G.colCats[c];
-    el.innerHTML = `<div>${cat.icon}</div><div style="font-size:9px;line-height:1.2;">${cat.name}</div>`;
+    el.innerHTML = `<div>${cat.icon}</div><div style="font-size:9px;line-height:1.2;">${cat.abbr}</div>`;
     container.appendChild(el);
   }
 
@@ -1621,7 +1634,7 @@ function buildSolutionGrid(containerId) {
     const rh = document.createElement('div');
     rh.className = 'sol-row-header';
     const cat = G.rowCats[r];
-    rh.innerHTML = `<div>${cat.icon}</div><div style="font-size:9px;line-height:1.2;">${cat.name}</div>`;
+    rh.innerHTML = `<div>${cat.icon}</div><div style="font-size:9px;line-height:1.2;">${cat.abbr}</div>`;
     container.appendChild(rh);
 
     for (let c = 0; c < 3; c++) {

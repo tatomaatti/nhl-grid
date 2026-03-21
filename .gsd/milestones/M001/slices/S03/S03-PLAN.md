@@ -50,7 +50,7 @@
   - Verify: `node test-grid-gen.js 30` — tulostaa raportin, exit code 0, 0 FAIL-rivejä
   - Done when: Testiskripti generoi 30+ gridiä onnistuneesti ja raportoi tilastot. --verbose toimii yksittäiselle gridille.
 
-- [ ] **T02: Joukkuenimet lyhenteinä ja ei-pelattavien palkintojen piilotus** `est:30m`
+- [x] **T02: Joukkuenimet lyhenteinä ja ei-pelattavien palkintojen piilotus** `est:30m`
   - Why: R012 — joukkuenimet vievät liikaa tilaa mobiilissa. R013 — ei-pelattavat palkinnot sekoittavat pelaajaa.
   - Files: `daily.html`
   - Do: 1) Lisää TEAMS-objektiin `abbr`-kenttä jokaiselle joukkueelle (3-kirjaiminen lyhenne = objektin avain, esim. EDM, TOR, BOS). 2) Lisää `abbr`-kenttä NATS-objektiin (paikallinen nimi = nykyinen name). 3) Lisää `abbr`-kenttä AWARDS-objektiin (lyhytnimi, esim. "Hart Trophy"). 4) Kategorioiden buildCategoryPool(): käytä `abbr`-kenttää `name`-kentän rinnalla — aseta `cat.abbr = info.abbr || info.name`. 5) Korvaa `cat.name` käyttö `cat.abbr`:lla kaikissa renderöintipaikoissa: grid-headerit (renderGrid, 2 paikkaa), guess-panelin listaelementit (renderGuessList), status-viestit (makeGuess, 2 paikkaa), ratkaisu-grid (buildSolutionGrid, 2 paikkaa). 6) Guess-panelin haku (renderGuessList filter) pitää hakea SEKÄ `cat.name`:sta ETTÄ `cat.abbr`:sta — pelaaja voi hakea "COL" tai "Colorado". 7) Määritä PLAYABLE_AWARDS-setti: `new Set(Object.keys(AWARDS))`. 8) Muokkaa formatPlayerHint(): filtteröi `p.a.filter(k => PLAYABLE_AWARDS.has(k))` ennen renderöintiä. 9) Jos filtteröidyn listan pituus on 0, älä näytä palkinto-riviä ollenkaan. 10) Tarkista ettei mikään muu paikka daily.html:ssä näytä raakaa `p.a`-dataa ilman filtteröintiä.

@@ -62,3 +62,10 @@ Kaksi UI-muutosta daily.html:iin: (1) joukkuenimet näytetään lyhenteinä (R01
 ## Expected Output
 
 - `daily.html` — päivitetty: abbr-kentät, PLAYABLE_AWARDS-filtteri, renderöinnin muutokset
+
+## Observability Impact
+
+- **PLAYABLE_AWARDS-filtteri**: `formatPlayerHint()` suodattaa ei-pelattavat palkinnot ennen renderöintiä — pelaaja ei näe LadyByng, Masterton, Jennings yms. vihjeissä
+- **abbr-kenttä kategorioissa**: Kaikki `buildCategoryPool()`-tuottamat kategoriat sisältävät `abbr`-kentän → inspect selaimessa `G.rowCats[0].abbr` tai `G.colCats[0].abbr`
+- **Haku toimii kahdella tavalla**: `cat.name` ja `cat.abbr` molemmat matchaavat → testattavissa selaimessa hakukentällä
+- **Diagnosointi**: `grep -c "PLAYABLE_AWARDS" daily.html` (≥2), `grep -c "cat\.abbr" daily.html` (≥6)
