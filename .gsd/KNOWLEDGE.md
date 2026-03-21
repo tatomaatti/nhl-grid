@@ -122,3 +122,9 @@
 - 15s fallback timeout — jos READY ei tule, peli alkaa silti
 - Korvasi aiemman epäluotettavan 500ms setTimeout-ratkaisun
 - `[PeerJS]`-prefixi kaikissa yhteyslogeissa konsolissa
+
+## K023 — Verify-skriptit vanhenevat rakenteellisissa muutoksissa
+- S01:n verify-s01.sh etsii `visualViewport`:ia HTML-tiedostoista, mutta S04 siirsi JS:n erillisiin tiedostoihin → 2 stale FAIL
+- Aiemman slicen verify-skripti ei automaattisesti päivity myöhemmän slicen muutoksissa
+- Luotettavin kokonaiskuva: aja viimeisimmän slicen verify-skripti (verify-s05.sh) + verify-s04.sh
+- Jos rakenteellisia muutoksia tehdään, tarkista aiempien slicejen verify-skriptien relevanssi
