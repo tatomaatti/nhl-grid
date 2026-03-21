@@ -4,17 +4,6 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Active
 
-### R004 — Jokainen generoitu Daily Grid on ratkaistavissa, monipuolinen ja taktisesti kiinnostava
-- Class: primary-user-loop
-- Status: active
-- Description: Jokainen generoitu Daily Grid on ratkaistavissa, monipuolinen ja taktisesti kiinnostava
-- Why it matters: Pelikokemus on suoraan sidottu puzzlejen laatuun
-- Source: inferred
-- Primary owning slice: M001/S03
-- Supporting slices: none
-- Validation: `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, exit code 0
-- Notes: Grid-generaattorin validointi ja testaus
-
 ### R005 — JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
 - Class: quality-attribute
 - Status: active
@@ -59,28 +48,6 @@ This file is the explicit capability and coverage contract for the project.
 - Validation: unmapped
 - Notes: Todennäköisesti PeerJS-yhteyden alustuksen timing-ongelma
 
-### R012 — Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
-- Class: primary-user-loop
-- Status: active
-- Description: Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
-- Why it matters: Täydet nimet vievät liikaa tilaa etenkin mobiilissa
-- Source: user
-- Primary owning slice: M001/S03
-- Supporting slices: none
-- Validation: daily.html: `grep -c "cat\.abbr" daily.html` >= 6, joukkuekategoriat näkyvät lyhenteinä selaimessa
-- Notes: Vaikuttaa grid-renderöintiin ja guess-paneliin
-
-### R013 — Pelaajien palkinnot jotka eivät ole pelissä kategorioina (esim. MarkMessierLeadershipAward) eivät näy vihjeissä eikä UI:ssa, mutta säilytetään databasessa
-- Class: primary-user-loop
-- Status: active
-- Description: Pelaajien palkinnot jotka eivät ole pelissä kategorioina (esim. MarkMessierLeadershipAward) eivät näy vihjeissä eikä UI:ssa, mutta säilytetään databasessa
-- Why it matters: Ylimääräiset palkinnot sekoittavat pelaajaa — ne eivät ole arvattavissa
-- Source: user
-- Primary owning slice: M001/S03
-- Supporting slices: none
-- Validation: `grep -c "PLAYABLE_AWARDS" daily.html` >= 2, formatPlayerHint filtteröi ei-pelattavat palkinnot
-- Notes: Filtteröinti UI-tasolla, ei datan poistoa
-
 ## Validated
 
 ### R001 — Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
@@ -115,6 +82,39 @@ This file is the explicit capability and coverage contract for the project.
 - Supporting slices: none
 - Validation: S02 T01: audit 0 lost players/awards, spot-check 5 pelaajaa (Gretzky, Crosby, Ovechkin, Selänne, McDavid). S02 T02: selaintesti daily.html + index.html, DB.length === 5880 molemmissa, pelaajahaku toimii, 0 JS-virheitä. Kaikki 10 verifikaatiota läpi. Vahvistettu 2026-03-21.
 - Notes: ETL-pipeline valmis, players.js rebuilditty, players-full.js sisältää position/handedness. 131 pelaajaa ilman position-dataa (historialliset).
+
+### R004 — Jokainen generoitu Daily Grid on ratkaistavissa, monipuolinen ja taktisesti kiinnostava
+- Class: primary-user-loop
+- Status: validated
+- Description: Jokainen generoitu Daily Grid on ratkaistavissa, monipuolinen ja taktisesti kiinnostava
+- Why it matters: Pelikokemus on suoraan sidottu puzzlejen laatuun
+- Source: inferred
+- Primary owning slice: M001/S03
+- Supporting slices: none
+- Validation: `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, 0 failures, exit code 0. Kategoriajakauma: team 65.6%, nat 18.3%, award 10.0%, special 6.1%. Intersektio-koot: min=3, avg=68.1, max=532. Vahvistettu 2026-03-21.
+- Notes: Grid-generaattorin validointi ja testaus
+
+### R012 — Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
+- Class: primary-user-loop
+- Status: validated
+- Description: Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
+- Why it matters: Täydet nimet vievät liikaa tilaa etenkin mobiilissa
+- Source: user
+- Primary owning slice: M001/S03
+- Supporting slices: none
+- Validation: `grep -c "cat\.abbr" daily.html` = 8 (≥6). abbr-kenttä lisätty TEAMS/NATS/AWARDS-objekteihin, 8 renderöintipaikkaa käyttää cat.abbr:ia. Selaimessa joukkuekategoriat näkyvät lyhenteinä (PHI, COL, EDM). Haku toimii sekä lyhenteellä ("COL") että nimellä ("Colorado"). Vahvistettu 2026-03-21.
+- Notes: Vaikuttaa grid-renderöintiin ja guess-paneliin
+
+### R013 — Pelaajien palkinnot jotka eivät ole pelissä kategorioina (esim. MarkMessierLeadershipAward) eivät näy vihjeissä eikä UI:ssa, mutta säilytetään databasessa
+- Class: primary-user-loop
+- Status: validated
+- Description: Pelaajien palkinnot jotka eivät ole pelissä kategorioina (esim. MarkMessierLeadershipAward) eivät näy vihjeissä eikä UI:ssa, mutta säilytetään databasessa
+- Why it matters: Ylimääräiset palkinnot sekoittavat pelaajaa — ne eivät ole arvattavissa
+- Source: user
+- Primary owning slice: M001/S03
+- Supporting slices: none
+- Validation: `grep -c "PLAYABLE_AWARDS" daily.html` = 2 (≥2). PLAYABLE_AWARDS = new Set(Object.keys(AWARDS)) — 10 pelattavaa palkintoa. formatPlayerHint() filtteröi p.a:n PLAYABLE_AWARDS:lla. Gretzky: LadyByng piilotettu, 5 pelattavaa näkyy. Anders Lee (vain KingClancy): palkintoriviä ei näytetä. players.js muokkaamaton. Vahvistettu 2026-03-21.
+- Notes: Filtteröinti UI-tasolla, ei datan poistoa
 
 ## Deferred
 
@@ -171,13 +171,13 @@ This file is the explicit capability and coverage contract for the project.
 | R001 | primary-user-loop | validated | M001/S01 | none | bash scripts/verify-s01.sh passaa kaikki 21 tarkistusta (viewport, touch targets ≥44px, visualViewport, overscroll-behavior, touch-action) — vahvistettu 2026-03-21. Lopullinen mobiili-UAT (iOS Safari + Android Chrome) vaaditaan erikseen. |
 | R002 | quality-attribute | validated | M001/S01 | none | nhl-grid.html on 14-rivinen redirect-sivu (meta refresh + JS fallback + noscript). diff nhl-grid.html index.html tuottaa eroja. Vahvistettu verify-s01.sh:llä. |
 | R003 | core-capability | validated | M001/S02 | none | S02 T01: audit 0 lost players/awards, spot-check 5 pelaajaa (Gretzky, Crosby, Ovechkin, Selänne, McDavid). S02 T02: selaintesti daily.html + index.html, DB.length === 5880 molemmissa, pelaajahaku toimii, 0 JS-virheitä. Kaikki 10 verifikaatiota läpi. Vahvistettu 2026-03-21. |
-| R004 | primary-user-loop | active | M001/S03 | none | `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, exit code 0 |
+| R004 | primary-user-loop | validated | M001/S03 | none | `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, 0 failures, exit code 0. Kategoriajakauma: team 65.6%, nat 18.3%, award 10.0%, special 6.1%. Intersektio-koot: min=3, avg=68.1, max=532. Vahvistettu 2026-03-21. |
 | R005 | quality-attribute | active | M001/S04 | none | unmapped |
 | R006 | primary-user-loop | active | M001/S05 | none | unmapped |
 | R010 | core-capability | active | M001/S05 | none | unmapped |
 | R011 | core-capability | active | M001/S05 | none | unmapped |
-| R012 | primary-user-loop | active | M001/S03 | none | daily.html: `grep -c "cat\.abbr" daily.html` >= 6, joukkuekategoriat näkyvät lyhenteinä selaimessa |
-| R013 | primary-user-loop | active | M001/S03 | none | `grep -c "PLAYABLE_AWARDS" daily.html` >= 2, formatPlayerHint filtteröi ei-pelattavat palkinnot |
+| R012 | primary-user-loop | validated | M001/S03 | none | `grep -c "cat\.abbr" daily.html` = 8 (≥6). abbr-kenttä lisätty TEAMS/NATS/AWARDS-objekteihin, 8 renderöintipaikkaa käyttää cat.abbr:ia. Selaimessa joukkuekategoriat näkyvät lyhenteinä (PHI, COL, EDM). Haku toimii sekä lyhenteellä ("COL") että nimellä ("Colorado"). Vahvistettu 2026-03-21. |
+| R013 | primary-user-loop | validated | M001/S03 | none | `grep -c "PLAYABLE_AWARDS" daily.html` = 2 (≥2). PLAYABLE_AWARDS = new Set(Object.keys(AWARDS)) — 10 pelattavaa palkintoa. formatPlayerHint() filtteröi p.a:n PLAYABLE_AWARDS:lla. Gretzky: LadyByng piilotettu, 5 pelattavaa näkyy. Anders Lee (vain KingClancy): palkintoriviä ei näytetä. players.js muokkaamaton. Vahvistettu 2026-03-21. |
 | R014 | core-capability | deferred | none | none | unmapped |
 | R015 | launchability | deferred | none | none | unmapped |
 | R016 | launchability | deferred | none | none | unmapped |
@@ -185,7 +185,7 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Coverage Summary
 
-- Active requirements: 7
-- Mapped to slices: 7
-- Validated: 3 (R001, R002, R003)
+- Active requirements: 4
+- Mapped to slices: 4
+- Validated: 6 (R001, R002, R003, R004, R012, R013)
 - Unmapped active requirements: 0

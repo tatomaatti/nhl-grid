@@ -54,7 +54,7 @@
   > After this: Molemmat pelimuodot ovat pelattavia mobiilissa, nhl-grid.html ohjaa index.html:iin, .gitignore on kunnossa
 - [x] **S02: Pelaajatietokannan rebuild ja audit** `risk:medium` `depends:[]`
   > After this: players.js on rebuildittu tuoreesta raakadatasta, audit raportoi 0 menetettyjä pelaajia/palkintoja
-- [ ] **S03: Daily Grid -generoinnin testaus ja hionta** `risk:low` `depends:[S02]`
+- [x] **S03: Daily Grid -generoinnin testaus ja hionta** `risk:low` `depends:[S02]`
   > After this: Grid-generointi on testattu 30+ seedillä, joukkuenimet lyhenteinä, ei-pelissä-olevat palkinnot piilotettu UI:sta
 - [ ] **S04: JS-erotus ja koodin siistiminen** `risk:low` `depends:[S01]`
   > After this: JS on eriytetty erillisiin tiedostoihin, HTML-tiedostot ovat luettavia, koodi on jaettavissa pelimuotojen välillä

@@ -66,3 +66,14 @@
 - Awards-cachen landing-sivuilla position/shootsCatches/birthDate 5749/5746/5699 pelaajalle (5880:sta)
 - 131 pelaajaa ilman position-dataa — historiallisia pelaajia joiden NHL API ei palauta kenttää
 - Enrichment poimii dataa KAIKILLE cachetuille pelaajille, ei vain palkituille (irrotettu awards-ehdosta D003)
+
+## K014 — players.js vm-sandbox lataus Node.js:ssä vaatii const→var korvauksen
+- players.js alkaa `const DB = [...]` — vm.runInNewContext ei tue const:ia globaalina
+- Korvaa `const DB` → `var DB` ennen evaluointia: `code.replace('const DB', 'var DB')`
+- Jos DB-muuttujan nimi muuttuu, lataus rikkoutuu — tarkista aina vm-sandboxia käyttävät skriptit
+- Toteutettu test-grid-gen.js:ssä (S03/T01)
+
+## K015 — test-grid-gen.js kopioi generoinnin logiikan daily.html:stä
+- Testiskripti sisältää kopion daily.html:n grid-generointifunktioista (ei importoi niitä)
+- Jos daily.html:n generointia muutetaan, test-grid-gen.js pitää päivittää manuaalisesti
+- S04:n JS-erotuksessa nämä voidaan yhdistää yhteiseksi moduuliksi → importointi testiskriptiin
