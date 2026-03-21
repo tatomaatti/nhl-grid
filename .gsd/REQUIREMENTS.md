@@ -2,41 +2,6 @@
 
 This file is the explicit capability and coverage contract for the project.
 
-## Active
-
-### R006 — Peli tukee suomea ja englantia. Oletuskieli seuraa selaimen/järjestelmän kieltä (navigator.language), fallback englanti. Pelaaja voi vaihtaa kielen manuaalisesti.
-- Class: primary-user-loop
-- Status: active
-- Description: Peli tukee suomea ja englantia. Oletuskieli seuraa selaimen/järjestelmän kieltä (navigator.language), fallback englanti. Pelaaja voi vaihtaa kielen manuaalisesti.
-- Why it matters: Pelin potentiaalinen yleisö on kansainvälinen — suomenkielinen UI rajaa käyttäjäkuntaa
-- Source: user
-- Primary owning slice: M001/S05
-- Supporting slices: none
-- Validation: unmapped
-- Notes: Englanti vakiona ellei järjestelmä ole suomi
-
-### R010 — Ristinollapelissä pelaaja 2:n "steals" eivät vähene käytettäessä — bugi
-- Class: core-capability
-- Status: active
-- Description: Ristinollapelissä pelaaja 2:n "steals" eivät vähene käytettäessä — bugi
-- Why it matters: Pelibalanssiongelma — pelaaja 2 saa rajattomasti varastuksia
-- Source: user
-- Primary owning slice: M001/S05
-- Supporting slices: none
-- Validation: unmapped
-- Notes: Bugikorjaus
-
-### R011 — Online-ristinollassa ensimmäinen peli katkeaa lähes aina, mutta sivunpäivityksen jälkeen toimii
-- Class: core-capability
-- Status: active
-- Description: Online-ristinollassa ensimmäinen peli katkeaa lähes aina, mutta sivunpäivityksen jälkeen toimii
-- Why it matters: Ensivaikutelma online-pelistä on rikki
-- Source: user
-- Primary owning slice: M001/S05
-- Supporting slices: none
-- Validation: unmapped
-- Notes: Todennäköisesti PeerJS-yhteyden alustuksen timing-ongelma
-
 ## Validated
 
 ### R001 — Peli on pelattava mobiilissa ilman viewport-ongelmia, näppäimistöbugia tai liian pieniä kosketusalueita
@@ -93,6 +58,39 @@ This file is the explicit capability and coverage contract for the project.
 - Supporting slices: none
 - Validation: JS eriytetty HTML:stä 4 erilliseen tiedostoon: shared.js (kategoriadata), config.js (ICE_CONFIG), daily-game.js (1065 riviä), grid-game.js (1394 riviä). daily.html 644 riviä (aiemmin ~1750), index.html 923 riviä (aiemmin ~2370). verify-s04.sh 27/27 PASS. Ei inline-JS:ää, ei duplikaatteja. ICE_CONFIG config.js:ssä. Selaintesti: 0 JS-virheitä, pelit toimivat identtisesti. Vahvistettu 2026-03-21.
 - Notes: JS eriytetään, ExpressTURN-tunnukset siirretään config.js:ään
+
+### R006 — Peli tukee suomea ja englantia. Oletuskieli seuraa selaimen/järjestelmän kieltä (navigator.language), fallback englanti. Pelaaja voi vaihtaa kielen manuaalisesti.
+- Class: primary-user-loop
+- Status: validated
+- Description: Peli tukee suomea ja englantia. Oletuskieli seuraa selaimen/järjestelmän kieltä (navigator.language), fallback englanti. Pelaaja voi vaihtaa kielen manuaalisesti.
+- Why it matters: Pelin potentiaalinen yleisö on kansainvälinen — suomenkielinen UI rajaa käyttäjäkuntaa
+- Source: user
+- Primary owning slice: M001/S05
+- Supporting slices: none
+- Validation: lang.js lokalisaatiojärjestelmä: STRINGS.fi + STRINGS.en sanakirjat (~120 avainta yhteensä), t()-funktio parametrisubstituutiolla, data-i18n-attribuutit (~22 daily.html + ~30 index.html elementtiä), kielenvaihtopainike molemmissa pelimuodoissa, localStorage-persistenssi, navigator.language-tunnistus. Selaintesti: kaikki UI-tekstit vaihtuvat oikein FI↔EN. verify-s05.sh 28/28 PASS. Vahvistettu 2026-03-21.
+- Notes: Englanti vakiona ellei järjestelmä ole suomi
+
+### R010 — Ristinollapelissä pelaaja 2:n "steals" eivät vähene käytettäessä — bugi
+- Class: core-capability
+- Status: validated
+- Description: Ristinollapelissä pelaaja 2:n "steals" eivät vähene käytettäessä — bugi
+- Why it matters: Pelibalanssiongelma — pelaaja 2 saa rajattomasti varastuksia
+- Source: user
+- Primary owning slice: M001/S05
+- Supporting slices: none
+- Validation: Steal-bugi korjattu: host päättelee G.stealMode solun omistajuudesta handleGuestMessage MOVE-casessa ennen validateAndApplyMove-kutsua. grep -q "stealMode" grid-game.js → löytyy. verify-s05.sh PASS. Offline-pelissä bugia ei ollut (clickCell asettaa stealMode oikein). Vahvistettu 2026-03-21.
+- Notes: Bugikorjaus
+
+### R011 — Online-ristinollassa ensimmäinen peli katkeaa lähes aina, mutta sivunpäivityksen jälkeen toimii
+- Class: core-capability
+- Status: validated
+- Description: Online-ristinollassa ensimmäinen peli katkeaa lähes aina, mutta sivunpäivityksen jälkeen toimii
+- Why it matters: Ensivaikutelma online-pelistä on rikki
+- Source: user
+- Primary owning slice: M001/S05
+- Supporting slices: none
+- Validation: READY-handshake korvaa 500ms setTimeout: guest lähettää {type:'READY'} data channel avetessa, host odottaa READY:ä ennen startOnlineRound(). 15s fallback timeout. grep -q "READY" grid-game.js → löytyy. Vanha setTimeout.*startOnlineRound poistettu (grep ei löydä). verify-s05.sh PASS. Online UAT vaatii kahden selaimen testauksen. Vahvistettu 2026-03-21.
+- Notes: Todennäköisesti PeerJS-yhteyden alustuksen timing-ongelma
 
 ### R012 — Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
 - Class: primary-user-loop
@@ -173,9 +171,9 @@ This file is the explicit capability and coverage contract for the project.
 | R003 | core-capability | validated | M001/S02 | none | S02 T01: audit 0 lost players/awards, spot-check 5 pelaajaa (Gretzky, Crosby, Ovechkin, Selänne, McDavid). S02 T02: selaintesti daily.html + index.html, DB.length === 5880 molemmissa, pelaajahaku toimii, 0 JS-virheitä. Kaikki 10 verifikaatiota läpi. Vahvistettu 2026-03-21. |
 | R004 | primary-user-loop | validated | M001/S03 | none | `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, 0 failures, exit code 0. Kategoriajakauma: team 65.6%, nat 18.3%, award 10.0%, special 6.1%. Intersektio-koot: min=3, avg=68.1, max=532. Vahvistettu 2026-03-21. |
 | R005 | quality-attribute | validated | M001/S04 | none | JS eriytetty HTML:stä 4 erilliseen tiedostoon: shared.js (kategoriadata), config.js (ICE_CONFIG), daily-game.js (1065 riviä), grid-game.js (1394 riviä). daily.html 644 riviä (aiemmin ~1750), index.html 923 riviä (aiemmin ~2370). verify-s04.sh 27/27 PASS. Ei inline-JS:ää, ei duplikaatteja. ICE_CONFIG config.js:ssä. Selaintesti: 0 JS-virheitä, pelit toimivat identtisesti. Vahvistettu 2026-03-21. |
-| R006 | primary-user-loop | active | M001/S05 | none | unmapped |
-| R010 | core-capability | active | M001/S05 | none | unmapped |
-| R011 | core-capability | active | M001/S05 | none | unmapped |
+| R006 | primary-user-loop | validated | M001/S05 | none | lang.js lokalisaatiojärjestelmä: STRINGS.fi + STRINGS.en sanakirjat (~120 avainta yhteensä), t()-funktio parametrisubstituutiolla, data-i18n-attribuutit (~22 daily.html + ~30 index.html elementtiä), kielenvaihtopainike molemmissa pelimuodoissa, localStorage-persistenssi, navigator.language-tunnistus. Selaintesti: kaikki UI-tekstit vaihtuvat oikein FI↔EN. verify-s05.sh 28/28 PASS. Vahvistettu 2026-03-21. |
+| R010 | core-capability | validated | M001/S05 | none | Steal-bugi korjattu: host päättelee G.stealMode solun omistajuudesta handleGuestMessage MOVE-casessa ennen validateAndApplyMove-kutsua. grep -q "stealMode" grid-game.js → löytyy. verify-s05.sh PASS. Offline-pelissä bugia ei ollut (clickCell asettaa stealMode oikein). Vahvistettu 2026-03-21. |
+| R011 | core-capability | validated | M001/S05 | none | READY-handshake korvaa 500ms setTimeout: guest lähettää {type:'READY'} data channel avetessa, host odottaa READY:ä ennen startOnlineRound(). 15s fallback timeout. grep -q "READY" grid-game.js → löytyy. Vanha setTimeout.*startOnlineRound poistettu (grep ei löydä). verify-s05.sh PASS. Online UAT vaatii kahden selaimen testauksen. Vahvistettu 2026-03-21. |
 | R012 | primary-user-loop | validated | M001/S03 | none | `grep -c "cat\.abbr" daily.html` = 8 (≥6). abbr-kenttä lisätty TEAMS/NATS/AWARDS-objekteihin, 8 renderöintipaikkaa käyttää cat.abbr:ia. Selaimessa joukkuekategoriat näkyvät lyhenteinä (PHI, COL, EDM). Haku toimii sekä lyhenteellä ("COL") että nimellä ("Colorado"). Vahvistettu 2026-03-21. |
 | R013 | primary-user-loop | validated | M001/S03 | none | `grep -c "PLAYABLE_AWARDS" daily.html` = 2 (≥2). PLAYABLE_AWARDS = new Set(Object.keys(AWARDS)) — 10 pelattavaa palkintoa. formatPlayerHint() filtteröi p.a:n PLAYABLE_AWARDS:lla. Gretzky: LadyByng piilotettu, 5 pelattavaa näkyy. Anders Lee (vain KingClancy): palkintoriviä ei näytetä. players.js muokkaamaton. Vahvistettu 2026-03-21. |
 | R014 | core-capability | deferred | none | none | unmapped |
@@ -185,7 +183,7 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Coverage Summary
 
-- Active requirements: 3
-- Mapped to slices: 3
-- Validated: 7 (R001, R002, R003, R004, R005, R012, R013)
+- Active requirements: 0
+- Mapped to slices: 0
+- Validated: 10 (R001, R002, R003, R004, R005, R006, R010, R011, R012, R013)
 - Unmapped active requirements: 0

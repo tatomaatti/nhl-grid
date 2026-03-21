@@ -105,3 +105,20 @@
 - `element.style.display` palauttaa vain inline-tyylien arvon, ei CSS-luokkien
 - Jos elementti on piilotettu CSS:llä (display:none CSS-säännössä), `style.display` on `""` (tyhjä), EI `"none"`
 - `offsetParent !== null` on luotettavampi näkyvyystarkistus — palauttaa null jos elementti tai vanhempi on piilotettu
+
+## K021 — Lokalisaatioarkkitehtuuri (lang.js)
+- `lang.js` latautuu shared.js:n jälkeen, ennen game-tiedostoja
+- Staattinen teksti: `data-i18n="key"` attribuutti HTML-elementissä → `applyLanguage()` päivittää
+- Dynaaminen teksti: `t("key", ...args)` kutsu JS:ssä, `{0}`/`{1}` parametrisubstituutio
+- Input-placeholderit: `data-i18n-placeholder="key"` → applyLanguage päivittää `.placeholder`
+- Kielenvaihto: `setLang("fi"|"en")` → päivittää localStorage + DOM + dispatch `langChanged`
+- Game-tiedostojen tulee kuunnella `langChanged`-eventtiä ja päivittää dynaamiset tekstit
+- Kategoriadata (TEAMS/NATS/AWARDS) lokalisoitu `catLang(info)` -apufunktiolla shared.js:ssä, ei STRINGS-sanakirjasta
+- `_t(key)` fallback-funktio DB-virheille kun lang.js ei ole vielä ladattu
+
+## K022 — Online-pelin READY-handshake
+- Guest lähettää `{type:'READY'}` kun data channel avautuu
+- Host odottaa READY-viestiä ennen `startOnlineRound()`-kutsua
+- 15s fallback timeout — jos READY ei tule, peli alkaa silti
+- Korvasi aiemman epäluotettavan 500ms setTimeout-ratkaisun
+- `[PeerJS]`-prefixi kaikissa yhteyslogeissa konsolissa
