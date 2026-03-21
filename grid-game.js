@@ -1,7 +1,7 @@
 // =====================================================================
 // grid-game.js — NHL Grid Ristinolla -pelilogiikka
 // Riippuvuudet: players.js (DB), shared.js (TEAMS, NATS, AWARDS),
-//               config.js (ICE_CONFIG), PeerJS CDN (Peer)
+//               config.js (FIREBASE_CONFIG), Firebase SDK (compat)
 // =====================================================================
 
 // Check that players.js loaded correctly
@@ -19,6 +19,12 @@ if (typeof DB === 'undefined') {
   });
   throw new Error('players.js not loaded — DB is undefined');
 }
+
+// =====================================================================
+// FIREBASE INITIALIZATION
+// =====================================================================
+const firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+const firebaseDb = firebase.database();
 
 function catInfo(key) {
   return TEAMS[key] || NATS[key] || AWARDS[key] || {name:key,icon:"?",abbr:key};
@@ -189,13 +195,15 @@ let sugHighlightIdx = -1;
 // ONLINE STATE
 // =====================================================================
 let NET = {
-  peer: null,
-  conn: null,
+  roomRef: null,       // Firebase database reference to /rooms/{code}
+  unsubscribe: null,   // onValue listener cleanup function
   isHost: false,
   roomCode: null,
   seriesScores: [0, 0],  // [p1 wins, p2 wins]
   currentRound: 1,
   myPlayerNum: 0,         // 1 = host, 2 = guest
+  moveCounter: 0,         // monotonic counter to detect new moves
+  lastProcessed: 0,       // last moveCounter we handled
 };
 
 // =====================================================================
@@ -297,7 +305,7 @@ function updateSeriesBar() {
 
 function goMenu() {
   stopTimer();
-  cleanupPeer();
+  cleanupRoom();
   CFG.onlineMode = false;
   NET.seriesScores = [0, 0];
   NET.currentRound = 1;
@@ -314,7 +322,7 @@ function closeSurrenderModal() {
 }
 function confirmSurrender() {
   closeSurrenderModal();
-  if (CFG.onlineMode && NET.conn) {
+  if (CFG.onlineMode && NET.roomRef) {
     sendMsg({ type: 'SURRENDER' });
   }
   goMenu();
@@ -921,7 +929,7 @@ function updateHintBar() {
 }
 
 // =====================================================================
-// ONLINE: PeerJS CONNECTION
+// ONLINE: FIREBASE CONNECTION
 // =====================================================================
 function generateRoomCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -929,12 +937,15 @@ function generateRoomCode() {
   for (let i = 0; i < 5; i++) code += chars[Math.floor(Math.random() * chars.length)];
   return code;
 }
+
 function createOnlineGame() {
   CFG.onlineMode = true;
   NET.isHost = true;
   NET.myPlayerNum = 1;
   NET.seriesScores = [0, 0];
   NET.currentRound = 1;
+  NET.moveCounter = 0;
+  NET.lastProcessed = 0;
   NET.roomCode = generateRoomCode();
 
   showScreen('lobby-screen');
@@ -945,88 +956,57 @@ function createOnlineGame() {
   document.getElementById('lobby-spinner').style.display = 'block';
   document.getElementById('lobby-join-section').style.display = 'none';
 
-  // Create PeerJS peer with TURN servers for NAT traversal
-  NET.peer = new Peer(NET.roomCode, { debug: 2, config: ICE_CONFIG });
+  const roomPath = 'rooms/' + NET.roomCode;
+  NET.roomRef = firebaseDb.ref(roomPath);
 
-  NET.peer.on('open', function(id) {
-    console.log('[PeerJS] Host peer opened:', id);
-  });
-
-  NET.peer.on('connection', function(conn) {
-    NET.conn = conn;
-    document.getElementById('lobby-status').textContent = t('opponent_connected');
-    document.getElementById('lobby-spinner').style.display = 'none';
-
-    let connOpened = false;
-    let guestReady = false;
-    let readyTimeout = null;
-
-    function onConnOpen() {
-      if (connOpened) return; // prevent double-fire
-      connOpened = true;
-      console.log('[PeerJS] Host: data channel open, waiting for guest READY');
-      document.getElementById('lobby-status').textContent = t('connected_waiting');
-
-      // 15s timeout as fallback if READY never arrives
-      readyTimeout = setTimeout(() => {
-        if (!guestReady) {
-          console.error('[PeerJS] Host: guest READY not received in 15s, starting anyway');
-          guestReady = true;
-          startOnlineRound();
-        }
-      }, 15000);
-    }
-
-    conn.on('open', onConnOpen);
-
-    // PeerJS race condition fix: 'open' may have already fired
-    if (conn.open) {
-      console.log('[PeerJS] Host: connection was already open');
-      onConnOpen();
-    }
-
-    // Timeout: if data channel doesn't open in 15s, show error
-    setTimeout(() => {
-      if (!connOpened) {
-        console.error('[PeerJS] Host: data channel did not open in 15s');
-        document.getElementById('lobby-status').textContent =
-          t('connection_failed_nat');
-        document.getElementById('lobby-spinner').style.display = 'none';
-      }
-    }, 15000);
-
-    conn.on('data', function(data) {
-      // READY handshake: guest signals it's ready to receive
-      if (data.type === 'READY' && !guestReady) {
-        guestReady = true;
-        if (readyTimeout) clearTimeout(readyTimeout);
-        console.log('[PeerJS] Host: guest READY received, starting round');
-        document.getElementById('lobby-status').textContent = t('connected_ready');
-        startOnlineRound();
-        return;
-      }
-      handleGuestMessage(data);
-    });
-
-    conn.on('close', function() {
-      handleDisconnect();
-    });
-
-    conn.on('error', function(err) {
-      console.error('Host connection error:', err);
-      document.getElementById('lobby-status').textContent = t('connection_error', err.type);
-    });
-  });
-
-  NET.peer.on('error', function(err) {
-    console.error('Peer error:', err);
-    if (err.type === 'unavailable-id') {
-      // Room code taken, regenerate
+  // Check if room code is already taken
+  NET.roomRef.get().then(function(snap) {
+    if (snap.exists()) {
+      console.log('[Firebase] Room code taken, regenerating');
       NET.roomCode = generateRoomCode();
       document.getElementById('room-code-display').textContent = NET.roomCode;
-      NET.peer.destroy();
       createOnlineGame();
+      return;
     }
+
+    // Create room in Firebase
+    const roomData = {
+      host: true,
+      guest: false,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      state: 'waiting', // waiting → playing → finished
+    };
+
+    NET.roomRef = firebaseDb.ref('rooms/' + NET.roomCode);
+    NET.roomRef.set(roomData).then(function() {
+      console.log('[Firebase] Room created:', NET.roomCode);
+
+      // Auto-cleanup when host disconnects
+      NET.roomRef.onDisconnect().remove();
+
+      // Listen for guest joining
+      NET.roomRef.child('guest').on('value', function(snap) {
+        if (snap.val() === true) {
+          console.log('[Firebase] Guest joined room');
+          document.getElementById('lobby-status').textContent = t('opponent_connected');
+          document.getElementById('lobby-spinner').style.display = 'none';
+
+          // Start listening for guest actions
+          listenForGuestActions();
+
+          // Start first round
+          startOnlineRound();
+        }
+      });
+    }).catch(function(err) {
+      console.error('[Firebase] Room creation failed:', err);
+      document.getElementById('lobby-status').textContent = t('connection_error', err.message);
+      document.getElementById('lobby-spinner').style.display = 'none';
+    });
+  }).catch(function(err) {
+    console.error('[Firebase] Room check failed:', err);
+    document.getElementById('lobby-status').textContent = t('connection_error', err.message);
+    document.getElementById('lobby-spinner').style.display = 'none';
   });
 }
 
@@ -1037,6 +1017,8 @@ function joinOnlineGame(code) {
   NET.roomCode = code.toUpperCase();
   NET.seriesScores = [0, 0];
   NET.currentRound = 1;
+  NET.moveCounter = 0;
+  NET.lastProcessed = 0;
 
   showScreen('lobby-screen');
   document.getElementById('lobby-title').textContent = t('connecting');
@@ -1046,81 +1028,133 @@ function joinOnlineGame(code) {
   document.getElementById('lobby-spinner').style.display = 'block';
   document.getElementById('lobby-join-section').style.display = 'none';
 
-  NET.peer = new Peer(undefined, { debug: 2, config: ICE_CONFIG });
+  NET.roomRef = firebaseDb.ref('rooms/' + NET.roomCode);
 
-  NET.peer.on('open', function() {
-    NET.conn = NET.peer.connect(NET.roomCode, { serialization: 'json' });
+  // Check if room exists
+  NET.roomRef.get().then(function(snap) {
+    if (!snap.exists()) {
+      console.warn('[Firebase] Room not found:', NET.roomCode);
+      document.getElementById('lobby-status').textContent = t('connection_failed_check');
+      document.getElementById('lobby-spinner').style.display = 'none';
+      return;
+    }
 
-    let guestConnOpened = false;
+    const room = snap.val();
+    if (room.guest === true) {
+      console.warn('[Firebase] Room already full:', NET.roomCode);
+      document.getElementById('lobby-status').textContent = t('room_full');
+      document.getElementById('lobby-spinner').style.display = 'none';
+      return;
+    }
 
-    function onGuestConnOpen() {
-      if (guestConnOpened) return;
-      guestConnOpened = true;
-      console.log('[PeerJS] Guest: data channel open, sending READY');
+    // Join room
+    NET.roomRef.child('guest').set(true).then(function() {
+      console.log('[Firebase] Joined room:', NET.roomCode);
       document.getElementById('lobby-status').textContent = t('connected_guest');
       document.getElementById('lobby-spinner').style.display = 'none';
-      // Signal host that guest is ready to receive data
-      sendMsg({ type: 'READY' });
-    }
 
-    NET.conn.on('open', onGuestConnOpen);
+      // Auto-cleanup guest flag when guest disconnects
+      NET.roomRef.child('guest').onDisconnect().set(false);
 
-    // PeerJS race condition fix: 'open' may have already fired
-    if (NET.conn.open) {
-      console.log('[PeerJS] Guest: connection was already open');
-      onGuestConnOpen();
-    }
-
-    // Timeout: if data channel doesn't open in 15s, show error
-    setTimeout(() => {
-      if (!guestConnOpened) {
-        console.error('[PeerJS] Guest: data channel did not open in 15s');
-        document.getElementById('lobby-status').textContent =
-          t('connection_failed_nat');
-        document.getElementById('lobby-spinner').style.display = 'none';
-      }
-    }, 15000);
-
-    NET.conn.on('data', function(data) {
-      handleHostMessage(data);
+      // Listen for host messages (game state changes)
+      listenForHostMessages();
+    }).catch(function(err) {
+      console.error('[Firebase] Join failed:', err);
+      document.getElementById('lobby-status').textContent = t('connection_error', err.message);
+      document.getElementById('lobby-spinner').style.display = 'none';
     });
-
-    NET.conn.on('close', function() {
-      handleDisconnect();
-    });
-
-    NET.conn.on('error', function(err) {
-      console.error('Guest connection error:', err);
-      document.getElementById('lobby-status').textContent = t('connection_error', err.type);
-    });
-  });
-
-  NET.peer.on('error', function(err) {
-    console.error('Peer error:', err);
-    document.getElementById('lobby-status').textContent = t('connection_failed_check');
+  }).catch(function(err) {
+    console.error('[Firebase] Room check failed:', err);
+    document.getElementById('lobby-status').textContent = t('connection_error', err.message);
     document.getElementById('lobby-spinner').style.display = 'none';
   });
 }
 
+// =====================================================================
+// FIREBASE: Message passing via database updates
+// =====================================================================
+
+// Host writes game state to /rooms/{code}/hostMsg
+// Guest writes actions to /rooms/{code}/guestAction
+// Both use a monotonic counter to detect new messages
+
 function sendMsg(data) {
-  if (NET.conn && NET.conn.open) {
-    console.log('[PeerJS] Sending:', data.type);
-    NET.conn.send(data);
-  } else {
-    console.warn('[PeerJS] sendMsg failed - conn:', !!NET.conn, 'open:', NET.conn?.open);
+  if (!NET.roomRef) {
+    console.warn('[Firebase] sendMsg failed - no room ref');
+    return;
   }
+
+  if (NET.isHost) {
+    // Host writes to hostMsg
+    NET.moveCounter++;
+    const msg = Object.assign({}, data, { _mc: NET.moveCounter });
+    NET.roomRef.child('hostMsg').set(msg).then(function() {
+      console.log('[Firebase] Host sent:', data.type, 'mc:', NET.moveCounter);
+    }).catch(function(err) {
+      console.error('[Firebase] Host send failed:', err);
+    });
+  } else {
+    // Guest writes to guestAction
+    NET.moveCounter++;
+    const msg = Object.assign({}, data, { _mc: NET.moveCounter });
+    NET.roomRef.child('guestAction').set(msg).then(function() {
+      console.log('[Firebase] Guest sent:', data.type, 'mc:', NET.moveCounter);
+    }).catch(function(err) {
+      console.error('[Firebase] Guest send failed:', err);
+    });
+  }
+}
+
+// Host listens for guest actions
+function listenForGuestActions() {
+  NET.roomRef.child('guestAction').on('value', function(snap) {
+    const data = snap.val();
+    if (!data || !data._mc) return;
+    if (data._mc <= NET.lastProcessed) return; // Already handled
+    NET.lastProcessed = data._mc;
+    console.log('[Firebase] Host received guest action:', data.type);
+    handleGuestMessage(data);
+  });
+
+  // Detect guest disconnect
+  NET.roomRef.child('guest').on('value', function(snap) {
+    if (snap.val() === false && CFG.onlineMode && G.cells) {
+      console.log('[Firebase] Guest disconnected');
+      handleDisconnect();
+    }
+  });
+}
+
+// Guest listens for host messages
+function listenForHostMessages() {
+  NET.roomRef.child('hostMsg').on('value', function(snap) {
+    const data = snap.val();
+    if (!data || !data._mc) return;
+    if (data._mc <= NET.lastProcessed) return; // Already handled
+    NET.lastProcessed = data._mc;
+    console.log('[Firebase] Guest received host message:', data.type);
+    handleHostMessage(data);
+  });
+
+  // Detect host disconnect (room removed)
+  NET.roomRef.on('value', function(snap) {
+    if (!snap.exists() && CFG.onlineMode) {
+      console.log('[Firebase] Host disconnected (room removed)');
+      handleDisconnect();
+    }
+  });
 }
 
 function copyRoomCode() {
   const url = window.location.origin + window.location.pathname + '?room=' + NET.roomCode;
-  navigator.clipboard.writeText(url).then(() => {
+  navigator.clipboard.writeText(url).then(function() {
     document.getElementById('copy-btn').textContent = t('code_copied');
-    setTimeout(() => { document.getElementById('copy-btn').textContent = t('copy_link'); }, 2000);
-  }).catch(() => {
+    setTimeout(function() { document.getElementById('copy-btn').textContent = t('copy_link'); }, 2000);
+  }).catch(function() {
     // Fallback: copy just the code
     navigator.clipboard.writeText(NET.roomCode);
     document.getElementById('copy-btn').textContent = t('code_only_copied');
-    setTimeout(() => { document.getElementById('copy-btn').textContent = t('copy_link'); }, 2000);
+    setTimeout(function() { document.getElementById('copy-btn').textContent = t('copy_link'); }, 2000);
   });
 }
 
@@ -1131,9 +1165,17 @@ function joinFromInput() {
   }
 }
 
-function cleanupPeer() {
-  if (NET.conn) { try { NET.conn.close(); } catch(e) {} NET.conn = null; }
-  if (NET.peer) { try { NET.peer.destroy(); } catch(e) {} NET.peer = null; }
+function cleanupRoom() {
+  if (NET.roomRef) {
+    NET.roomRef.off(); // Remove all listeners
+    if (NET.isHost) {
+      NET.roomRef.remove().catch(function() {}); // Delete room data
+    }
+    NET.roomRef.onDisconnect().cancel(); // Cancel onDisconnect handlers
+    NET.roomRef = null;
+  }
+  NET.moveCounter = 0;
+  NET.lastProcessed = 0;
 }
 
 function handleDisconnect() {
@@ -1364,7 +1406,7 @@ function handleGuestMessage(data) {
     }
 
     default:
-      console.warn('[PeerJS] Unknown guest message type:', data.type);
+      console.warn('[Firebase] Unknown guest message type:', data.type);
   }
 }
 

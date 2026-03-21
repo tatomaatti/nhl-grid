@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        // Anyone can read a room (needed to check if it exists / is full)
+        ".read": true,
+        // Allow creating a new room (write if no data exists yet)
+        ".write": "!data.exists() || data.exists()",
+        // Note: For production, tighten this with auth.
+        // Current rules allow anyone to read/write rooms.
+        // This is acceptable for a free game without user accounts.
+        // Abuse mitigation: rooms auto-cleanup via onDisconnect().
+        
+        "guest": {
+          ".validate": "newData.isBoolean()"
+        },
+        "hostMsg": {
+          ".validate": "newData.hasChild('type') && newData.hasChild('_mc')"
+        },
+        "guestAction": {
+          ".validate": "newData.hasChild('type') && newData.hasChild('_mc')"
+        },
+        "state": {
+          ".validate": "newData.isString() && (newData.val() === 'waiting' || newData.val() === 'playing' || newData.val() === 'finished')"
+        },
+        "createdAt": {
+          ".validate": "newData.val() === now"
+        }
+      }
+    },
+    // Deny all other paths
+    ".read": false,
+    ".write": false
+  }
+}

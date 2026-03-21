@@ -129,9 +129,10 @@ const STRINGS = {
     connected_waiting:   'Yhteys muodostettu! Odotetaan vastustajaa...',
     opponent_connected:  'Vastustaja yhdistyi!',
     connected_guest:     'Yhdistetty! Odotetaan pelin alkua...',
-    connection_failed_nat: 'Yhteys epäonnistui (NAT/palomuuri). Kokeile toista verkkoa tai mobiilihotspotia.',
-    connection_failed_check: 'Yhteys epäonnistui. Tarkista koodi.',
+    connection_failed_nat: 'Yhteys epäonnistui. Kokeile uudelleen.',
+    connection_failed_check: 'Huonetta ei löytynyt. Tarkista koodi.',
     connection_error:    'Yhteysvirhe: {0}',
+    room_full:           'Huone on täynnä.',
 
     // Game
     player_1:            'Pelaaja 1',
@@ -340,9 +341,10 @@ const STRINGS = {
     connected_waiting:   'Connected! Waiting for opponent...',
     opponent_connected:  'Opponent connected!',
     connected_guest:     'Connected! Waiting for game to start...',
-    connection_failed_nat: 'Connection failed (NAT/firewall). Try another network or mobile hotspot.',
-    connection_failed_check: 'Connection failed. Check the code.',
+    connection_failed_nat: 'Connection failed. Please try again.',
+    connection_failed_check: 'Room not found. Check the code.',
     connection_error:    'Connection error: {0}',
+    room_full:           'Room is full.',
 
     // Game
     player_1:            'Player 1',
