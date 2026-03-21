@@ -48,7 +48,7 @@
   - Verify: `node -e "eval(require('fs').readFileSync('shared.js','utf8'))"` ja `node -e "eval(require('fs').readFileSync('config.js','utf8'))"` eivät heitä virhettä
   - Done when: shared.js + config.js olemassa, ei syntaksivirheitä, sisältävät kaikki kategoriaoliot ja ICE_CONFIG:n
 
-- [ ] **T02: Eristä daily-game.js ja päivitä daily.html** `est:40m`
+- [x] **T02: Eristä daily-game.js ja päivitä daily.html** `est:40m`
   - Why: daily.html:n ~1140 riviä inline-JS:ää siirretään erilliseen tiedostoon
   - Files: `daily-game.js`, `daily.html`
   - Do: 1) Siirrä daily.html:n `<script>`-blokin sisältö daily-game.js:ään. Poista kategoriadefinitiot (tulevat shared.js:stä). 2) Korvaa daily.html:n inline-script `<script src>`-tageilla oikeassa järjestyksessä: players.js → shared.js → daily-game.js. 3) Lisää DB-puuttumisen tarkistus daily-game.js:n alkuun (kuten index.html:ssä on). 4) Varmista visualViewport-handler säilyy. 5) Testaa selaimessa.

@@ -66,6 +66,13 @@ CSS pysyy daily.html:n sisällä (projektikonventio: "CSS pysyy HTML:n sisällä
 - `grep -q "TEAMS" daily-game.js && echo "FAIL: TEAMS in daily-game.js" || echo "PASS"` — TEAMS ei saa olla daily-game.js:ssä
 - Selaintesti: daily.html latautuu, gridi näkyy, pelaajahaku toimii
 
+## Observability Impact
+
+- **Uusi tiedosto `daily-game.js`**: Kaikki `[MobileUX]`-konsolilokit säilyvät tässä tiedostossa (visualViewport handler). DevToolsissa voi filtteröidä `[MobileUX]` nähdäkseen mobiilitapahtumat.
+- **DB-puuttumisen tarkistus**: Jos `players.js` ei lataudu ennen `daily-game.js`:ää, konsoliin tulee `Error: players.js not loaded — DB is undefined` — selkeä virheilmoitus latausjärjestysongelmasta.
+- **Script-latausvirheet**: Jos `shared.js` tai `daily-game.js` puuttuu, selainkonsolissa näkyy `404 (Not Found)` ja myöhemmin `ReferenceError` (esim. `TEAMS is not defined`).
+- **Tarkistuskomennot**: `wc -l daily.html` (< 700), `wc -l daily-game.js` (> 900), `grep -c "^<script src" daily.html` (= 3).
+
 ## Inputs
 
 - `daily.html` — lähde inline-JS:lle (rivit 641-1779)
