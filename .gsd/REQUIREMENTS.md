@@ -4,17 +4,6 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Active
 
-### R005 — JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
-- Class: quality-attribute
-- Status: active
-- Description: JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
-- Why it matters: 2300+ rivin single-file HTML on ylläpidon rajalla
-- Source: inferred
-- Primary owning slice: M001/S04
-- Supporting slices: none
-- Validation: unmapped
-- Notes: JS eriytetään, ExpressTURN-tunnukset siirretään config.js:ään
-
 ### R006 — Peli tukee suomea ja englantia. Oletuskieli seuraa selaimen/järjestelmän kieltä (navigator.language), fallback englanti. Pelaaja voi vaihtaa kielen manuaalisesti.
 - Class: primary-user-loop
 - Status: active
@@ -94,6 +83,17 @@ This file is the explicit capability and coverage contract for the project.
 - Validation: `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, 0 failures, exit code 0. Kategoriajakauma: team 65.6%, nat 18.3%, award 10.0%, special 6.1%. Intersektio-koot: min=3, avg=68.1, max=532. Vahvistettu 2026-03-21.
 - Notes: Grid-generaattorin validointi ja testaus
 
+### R005 — JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
+- Class: quality-attribute
+- Status: validated
+- Description: JS on eroteltu HTML:stä erillisiin tiedostoihin, koodissa ei ole kovakoodattuja tunnuksia
+- Why it matters: 2300+ rivin single-file HTML on ylläpidon rajalla
+- Source: inferred
+- Primary owning slice: M001/S04
+- Supporting slices: none
+- Validation: JS eriytetty HTML:stä 4 erilliseen tiedostoon: shared.js (kategoriadata), config.js (ICE_CONFIG), daily-game.js (1065 riviä), grid-game.js (1394 riviä). daily.html 644 riviä (aiemmin ~1750), index.html 923 riviä (aiemmin ~2370). verify-s04.sh 27/27 PASS. Ei inline-JS:ää, ei duplikaatteja. ICE_CONFIG config.js:ssä. Selaintesti: 0 JS-virheitä, pelit toimivat identtisesti. Vahvistettu 2026-03-21.
+- Notes: JS eriytetään, ExpressTURN-tunnukset siirretään config.js:ään
+
 ### R012 — Joukkueiden nimet näytetään lyhenteinä (COL, SJS) täysien nimien sijaan kategoriaotsikoissa
 - Class: primary-user-loop
 - Status: validated
@@ -172,7 +172,7 @@ This file is the explicit capability and coverage contract for the project.
 | R002 | quality-attribute | validated | M001/S01 | none | nhl-grid.html on 14-rivinen redirect-sivu (meta refresh + JS fallback + noscript). diff nhl-grid.html index.html tuottaa eroja. Vahvistettu verify-s01.sh:llä. |
 | R003 | core-capability | validated | M001/S02 | none | S02 T01: audit 0 lost players/awards, spot-check 5 pelaajaa (Gretzky, Crosby, Ovechkin, Selänne, McDavid). S02 T02: selaintesti daily.html + index.html, DB.length === 5880 molemmissa, pelaajahaku toimii, 0 JS-virheitä. Kaikki 10 verifikaatiota läpi. Vahvistettu 2026-03-21. |
 | R004 | primary-user-loop | validated | M001/S03 | none | `node test-grid-gen.js 30` — 30/30 OK, 0 fallback, 0 failures, exit code 0. Kategoriajakauma: team 65.6%, nat 18.3%, award 10.0%, special 6.1%. Intersektio-koot: min=3, avg=68.1, max=532. Vahvistettu 2026-03-21. |
-| R005 | quality-attribute | active | M001/S04 | none | unmapped |
+| R005 | quality-attribute | validated | M001/S04 | none | JS eriytetty HTML:stä 4 erilliseen tiedostoon: shared.js (kategoriadata), config.js (ICE_CONFIG), daily-game.js (1065 riviä), grid-game.js (1394 riviä). daily.html 644 riviä (aiemmin ~1750), index.html 923 riviä (aiemmin ~2370). verify-s04.sh 27/27 PASS. Ei inline-JS:ää, ei duplikaatteja. ICE_CONFIG config.js:ssä. Selaintesti: 0 JS-virheitä, pelit toimivat identtisesti. Vahvistettu 2026-03-21. |
 | R006 | primary-user-loop | active | M001/S05 | none | unmapped |
 | R010 | core-capability | active | M001/S05 | none | unmapped |
 | R011 | core-capability | active | M001/S05 | none | unmapped |
@@ -185,7 +185,7 @@ This file is the explicit capability and coverage contract for the project.
 
 ## Coverage Summary
 
-- Active requirements: 4
-- Mapped to slices: 4
-- Validated: 6 (R001, R002, R003, R004, R012, R013)
+- Active requirements: 3
+- Mapped to slices: 3
+- Validated: 7 (R001, R002, R003, R004, R005, R012, R013)
 - Unmapped active requirements: 0

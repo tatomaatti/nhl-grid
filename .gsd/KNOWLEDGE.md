@@ -83,3 +83,15 @@
 - `vm.createContext` + `vm.runInContext` ei myöskään aseta `const`:ia kontekstin propertyiksi
 - Toimiva tapa: `new Function(code + '; return {VAR1, VAR2};')()` — const näkyy funktion sisällä
 - Selaimessa `<script src>` toimii normaalisti const:lla — ongelma on vain Node.js-validoinnissa
+
+## K017 — Windows Git Bash -yhteensopivuus verify-skripteissä
+- `grep -P` (PCRE) ei tuettu Git Bashin grepissä — käytä `sed` tai `grep -E` (ERE)
+- `wc -l` tuottaa `\r\n`-rivinvaihtoja → `[ "$VAR" -eq 0 ]` rikkoutuu — putki `tr -d '\r'` tai `sed`
+- Skriptien testauksessa huomioi aina Git Bash vs Linux bash -erot
+
+## K018 — JS-erotuksen jälkeinen tiedostorakenne ja latausjärjestys
+- daily.html: players.js (head) → shared.js → daily-game.js (ennen </body>)
+- index.html: players.js (head) → shared.js → config.js → peerjs CDN → grid-game.js (ennen </body>)
+- DB-puuttumisen tarkistus kunkin game-tiedoston alussa: `if (typeof DB === 'undefined')` → throw + DOM-virheilmoitus
+- Kategoriadata (TEAMS, NATS, AWARDS, SPECIALS, PLAYABLE_AWARDS) vain shared.js:ssä — ei duplikaatteja
+- test-grid-gen.js kopioi edelleen generointilogiikan — EI importoi daily-game.js:stä (K015 edelleen voimassa)
