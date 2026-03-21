@@ -23,4 +23,4 @@ NHL Hockey Grid on kaksiosainen selainpeli: **Daily Grid** (päivittäinen Wordl
 
 ## Seuraava askel
 
-M001 S01 valmis. Seuraavat: S02 (pelaajatietokannan rebuild), S03 (grid-generoinnin testaus), S04 (JS-erotus), S05 (bugit + lokalisaatio).
+M001 S01 ja S02 valmiit. Seuraavat: S03 (grid-generoinnin testaus), S04 (JS-erotus), S05 (bugit + lokalisaatio).

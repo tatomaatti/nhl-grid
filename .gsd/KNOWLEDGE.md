@@ -56,3 +56,13 @@
 - iOS/Android minimum: 44×44px (Apple HIG / Material)
 - index.html:n pieniä painikkeita jotka tarvitsivat korjausta: steal-count (36px), weight (30px), hint-btn (26px), surrender (~34px), lobby-back (~30px)
 - Tarkista aina computed styles, ei vain CSS-sääntöjä — padding, margin ja line-height vaikuttavat todelliseen kokoon
+
+## K012 — players.js vs players-full.js formaattieroavaisuus grepissä
+- players.js ja players-full.js käyttävät unquoted JS-avaimia: `{n:"Name", t:["T1"], p:"C", h:"L"}`
+- `grep -c '"p":' players-full.js` EI täsmää — oikea: `grep -c ' p:"' players-full.js`
+- Luotettavin tapa tarkistaa: `vm.runInNewContext` Node.js:ssä (parsii JS:n oikein)
+
+## K013 — Bio enrichment kattavuus awards-cachesta
+- Awards-cachen landing-sivuilla position/shootsCatches/birthDate 5749/5746/5699 pelaajalle (5880:sta)
+- 131 pelaajaa ilman position-dataa — historiallisia pelaajia joiden NHL API ei palauta kenttää
+- Enrichment poimii dataa KAIKILLE cachetuille pelaajille, ei vain palkituille (irrotettu awards-ehdosta D003)
